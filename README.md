@@ -1,5 +1,9 @@
 # Banach Space Representer Theorems for Neural Networks
 
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://nonosecreta.github.io/distribution_NN/)
+
+View the live knowledge graph: [https://nonosecreta.github.io/distribution_NN/](https://nonosecreta.github.io/distribution_NN/)
+
 ## Project Overview
 
 This project creates an interactive knowledge graph for the paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines" by Parhi and Nowak. The knowledge graph organizes key concepts and their relationships into interconnected HTML nodes, making the paper's technical content more accessible and navigable.
