@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Classification</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Binary Classification</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The paper demonstrates that neural networks with bounded seminorm in the Radon domain exhibit strong generalization guarantees for binary classification tasks, providing theoretical foundations for practical regularization approaches.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Binary classification is a fundamental machine learning problem where the goal is to learn a function that can assign input data to one of two classes. Neural networks have shown remarkable empirical success in solving complex classification problems, but theoretical understanding of their generalization capabilities has lagged behind practical applications.
+        </p>
+        <p>
+            A central question in learning theory is: when does a classifier trained on finite data generalize well to unseen examples? For neural networks, this question is particularly intriguing due to their overparameterization—modern networks often have many more parameters than training examples, yet they can still generalize well when properly regularized.
+        </p>
+        <p>
+            The paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines" addresses this theoretical gap by establishing a direct connection between a function-space measure of complexity (the total variation seminorm in the Radon domain) and generalization performance. This provides a principled understanding of why regularized neural networks can achieve good generalization despite their high parameter count.
+        </p>
+        <h2>Mathematical Formulation</h2>
+        <p>
+            In the binary classification setting, the paper formulates the learning problem as:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} \sum_{n=1}^N \ell(y_n f(x_n)) \text{ s.t. } \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} \leq B$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\{(x_n, y_n)\}_{n=1}^N$$ is the training data with $$y_n \in \{-1, +1\}$$</li>
+            <li>$$\ell(\cdot)$$ is an appropriate loss function that assigns positive losses when $$\text{sgn}(f(x_n)) \neq y_n$$</li>
+            <li>$$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$ is the total variation seminorm in the Radon domain</li>
+            <li>$$B$$ is a constant that controls the complexity of the solution</li>
+        </ul>
+        <p>
+            This can be equivalently rewritten as a neural network training problem:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(y_n f_\theta(x_n)) \text{ s.t. } \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1} \leq B$$</p>
+        </div>
+        <p>
+            where $$f_\theta(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$ is a neural network with parameters $$\theta$$.
+        </p>
+        <p>
+            The paper demonstrates that the Rademacher complexity of this hypothesis class is bounded by:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2BC^{m-1}}{\sqrt{N}(m-1)!} + \mathcal{R}(c)$$</p>
+        </div>
+        <p>
+            where $$C$$ is a bound on the norm of the input data and $$\mathcal{R}(c)$$ is the Rademacher complexity of the polynomial terms. This bound directly controls the generalization error, providing theoretical guarantees for the performance of neural networks on unseen data.
+        </p>
+        <p>
+            Key insights from this analysis include:
+        </p>
+        <ul>
+            <li>The generalization error is controlled by the seminorm $$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$, not by the number of parameters</li>
+            <li>Regularization methods that constrain this seminorm (like path-norm or weight decay) promote good generalization</li>
+            <li>The bound scales as $$O(1/\sqrt{N})$$, showing that generalization improves with more training data</li>
+            <li>The complexity term depends on the activation function through the factor $$(m-1)!$$</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a binary classification problem where we have $$N = 100$$ training examples in $$\mathbb{R}^2$$, with features normalized so that $$\|x_n\|_2 \leq 1$$ for all examples. We want to train a ReLU network ($$m = 2$$) for this classification task.
+            </p>
+            <p>
+                Following the paper's framework, we implement the following constrained optimization:
+            </p>
+            <p>$$\min_{\theta} \sum_{n=1}^{100} \max\{0, 1 - y_n f_\theta(x_n)\} \text{ s.t. } \sum_{k=1}^K |v_k|\|w_k\|_2 \leq 5$$</p>
+            <p>
+                where we use the hinge loss and constrain the path-norm to be at most 5.
+            </p>
+            <p>
+                The Rademacher complexity of this hypothesis class is bounded by:
+            </p>
+            <p>$$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2 \cdot 5 \cdot 1^1}{\sqrt{100} \cdot 1!} = \frac{10}{\sqrt{100}} = \frac{10}{10} = 1$$</p>
+            <p>
+                Using standard generalization bounds from statistical learning theory, with probability at least 0.95, the generalization error is bounded by:
+            </p>
+            <p>$$\text{Error}(f) \leq \hat{\text{Error}}_N(f) + 1 \cdot 1 + 1\sqrt{\frac{\log(20)}{200}} \approx \hat{\text{Error}}_N(f) + 1.23$$</p>
+            <p>
+                where $$\hat{\text{Error}}_N(f)$$ is the training error.
+            </p>
+            <p>
+                If we achieve a training error of 0.05 (5%), the bound guarantees that our generalization error will be at most 1.28 (128%), which is not a tight bound. However, in practice, the actual generalization error is typically much lower than this worst-case bound. The important insight is that the bound scales with the seminorm rather than with the number of parameters, explaining why neural networks can generalize well despite having many parameters.
+            </p>
+            <p>
+                If we reduce the constraint to $$\sum_{k=1}^K |v_k|\|w_k\|_2 \leq 1$$, the bound becomes tighter ($$\mathcal{R}(\mathcal{F}_\Theta) \leq 0.2$$), potentially improving generalization at the cost of higher training error. This illustrates the classic bias-variance tradeoff in machine learning, with the seminorm providing a principled way to navigate this tradeoff.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="rademacher_complexity.html">Rademacher Complexity</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

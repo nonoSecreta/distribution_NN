@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-Splines</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>L-Splines</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            L-splines are a generalized class of splines defined through differential operators, providing a unified framework that connects classical polynomial splines, ridge splines, and neural networks through the lens of variational problems with total variation regularization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Traditional spline theory typically focuses on specific types of splines such as polynomial splines or thin-plate splines. The L-spline framework, developed by Unser et al. (2017), generalizes these concepts by associating splines with operators, providing a powerful and unified perspective for understanding diverse spline varieties.
+        </p>
+        <p>
+            In the paper by Parhi and Nowak, L-splines serve as an important precursor and inspiration for ridge splines. The authors extend the operator-centric approach of L-splines to the Radon domain, leading to their definition of ridge splines. Understanding L-splines is therefore essential for recognizing how ridge splines fit into the broader spline theory landscape and how neural networks can be viewed as solutions to variational problems.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            An L-spline is defined with respect to a pseudodifferential operator $$L: \mathcal{S}'(\mathbb{R}^d) \to \mathcal{S}'(\mathbb{R}^d)$$, where $$\mathcal{S}'(\mathbb{R}^d)$$ denotes the space of tempered distributions on $$\mathbb{R}^d$$. Formally, a function $$s:\mathbb{R}^d \to \mathbb{R}$$ is an L-spline if:
+        </p>
+        <div class="definition">
+            <p>$$L\{s\} = \sum_{k=1}^K v_k \delta_{\mathbb{R}^d}(\cdot - x_k)$$</p>
+        </div>
+        <p>
+            where $$\delta_{\mathbb{R}^d}$$ denotes the Dirac impulse on $$\mathbb{R}^d$$, $$\{v_k\}_{k=1}^K$$ is a sequence of weights, and $$\{x_k\}_{k=1}^K$$ are the locations of the spline knots.
+        </p>
+        <p>
+            Key properties and characteristics of L-splines include:
+        </p>
+        <ul>
+            <li>They are defined through the "sparsification" effect of the operator $$L$$, which maps the spline to a sum of Dirac impulses</li>
+            <li>They can be understood as solutions to variational problems of the form $$\min_{f} G(Vf) + \|Lf\|_{M(\mathbb{R}^d)}$$</li>
+            <li>Classical polynomial splines are a special case where $$L = D^n$$ (the nth derivative operator)</li>
+            <li>They provide a unified framework for understanding various types of splines</li>
+            <li>The null space of $$L$$, denoted $$\mathcal{N}_L$$, plays a crucial role in determining the structure of L-splines</li>
+            <li>The native space of $$L$$, denoted $$\mathcal{F}_L$$, is the domain where $$L$$ maps to measures</li>
+        </ul>
+        <p>
+            A key result in L-spline theory is the representer theorem, which states that solutions to variational problems with total variation regularization of $$Lf$$ are L-splines with a finite number of knots. Specifically, for problems of the form:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_L} G(Vf) + \|Lf\|_{M(\mathbb{R}^d)}$$</p>
+        </div>
+        <p>
+            the solutions take the form:
+        </p>
+        <div class="definition">
+            <p>$$s(x) = \sum_{k=1}^K v_k g_L(x - x_k) + p(x)$$</p>
+        </div>
+        <p>
+            where $$g_L$$ is the Green's function of $$L$$ and $$p$$ is a function in the null space of $$L$$.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the case of cubic splines in one dimension. These are L-splines with $$L = D^4$$ (the fourth derivative operator). A cubic spline $$s(x)$$ satisfies:
+            </p>
+            <p>
+                $$D^4\{s\} = \sum_{k=1}^K v_k \delta_{\mathbb{R}}(x - x_k)$$
+            </p>
+            <p>
+                The Green's function for $$D^4$$ is $$g_{D^4}(x) = \frac{|x|^3}{6}$$, and the null space consists of cubic polynomials. Thus, a cubic spline takes the form:
+            </p>
+            <p>
+                $$s(x) = \sum_{k=1}^K v_k \frac{|x-x_k|^3}{6} + c_0 + c_1 x + c_2 x^2 + c_3 x^3$$
+            </p>
+            <p>
+                This L-spline perspective directly connects to ridge splines in the paper. For $$m=4$$ (corresponding to cubic ridge splines), the operator $$R_4$$ plays a role analogous to $$D^4$$ but in the Radon domain. The resulting ridge spline takes the form:
+            </p>
+            <p>
+                $$s(x) = \sum_{k=1}^K v_k \frac{\max\{0, w_k^T x - b_k\}^3}{6} + \text{(polynomial of degree < 4)}$$
+            </p>
+            <p>
+                This example illustrates how the L-spline framework unifies classical splines and ridge splines (and thus neural networks) under a common mathematical structure, providing deep insights into the nature of these functions.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="greens_functions.html">Green's Functions</a></li>
+            <li><a href="operators.html">Linear Operators</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

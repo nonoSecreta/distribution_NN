@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivanov Estimators</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Ivanov Estimators</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Ivanov estimators are constraint-based regularization methods that restrict model complexity by imposing a bound on a regularization functional, providing a complementary perspective to Tikhonov regularization and playing a key role in establishing generalization bounds for neural networks in the paper.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In many machine learning and statistical estimation problems, controlling model complexity is essential for preventing overfitting and ensuring good generalization. While Tikhonov regularization addresses this by adding a penalty term to the objective function, Ivanov regularization takes a different approach by imposing explicit constraints on model complexity.
+        </p>
+        <p>
+            In the paper by Parhi and Nowak, Ivanov estimators provide a natural framework for analyzing the generalization performance of neural networks. By formulating neural network training as a constrained optimization problem with bounds on the total variation seminorm in the Radon domain, the authors can directly connect the complexity measure to generalization error through Rademacher complexity bounds.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            Formally, an Ivanov estimator for a learning problem is defined as the solution to a constrained optimization problem of the form:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} \sum_{n=1}^N \ell(f(x_n), y_n) \quad \text{subject to} \quad R(f) \leq B$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\ell(\cdot,\cdot)$$ is a loss function</li>
+            <li>$$\{(x_n, y_n)\}_{n=1}^N$$ is the training data</li>
+            <li>$$R(f)$$ is a regularization functional that measures the complexity of $$f$$</li>
+            <li>$$B$$ is a positive constant that bounds the complexity</li>
+            <li>$$\mathcal{F}$$ is the hypothesis space</li>
+        </ul>
+        <p>
+            Key properties and characteristics of Ivanov estimators include:
+        </p>
+        <ul>
+            <li>They enforce an explicit upper bound on model complexity</li>
+            <li>They are equivalent to Tikhonov estimators (with appropriate parameter choice) for convex problems</li>
+            <li>The parameter $$B$$ directly controls the bias-variance tradeoff</li>
+            <li>They can be more interpretable than Tikhonov estimators when the constraint has a meaningful interpretation</li>
+            <li>They are particularly useful when rigorous generalization bounds are desired</li>
+        </ul>
+        <p>
+            In the context of the paper, the Ivanov estimator for neural networks takes the form:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(y_n f_\theta(x_n)) \quad \text{subject to} \quad \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1} \leq B$$</p>
+        </div>
+        <p>
+            where $$f_\theta(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$ is a neural network with parameters $$\theta = (v_1,...,v_K, w_1,...,w_K, b_1,...,b_K, c)$$.
+        </p>
+        <p>
+            This formulation directly constrains the total variation seminorm in the Radon domain, as:
+        </p>
+        <div class="definition">
+            <p>$$\|R_m f_\theta\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+        </div>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a binary classification problem with 100 training examples. We want to train a ReLU network ($$m=2$$) to classify the data while ensuring good generalization. Using the Ivanov estimator approach, we formulate the problem as:
+            </p>
+            <p>
+                $$\min_{\theta} \sum_{n=1}^{100} \max\{0, 1 - y_n f_\theta(x_n)\} \quad \text{subject to} \quad \sum_{k=1}^K |v_k|\|w_k\|_2 \leq 5$$
+            </p>
+            <p>
+                where we've used the hinge loss and constrained the path-norm to be at most 5.
+            </p>
+            <p>
+                The paper proves that the Rademacher complexity of this constrained hypothesis class is bounded by:
+            </p>
+            <p>
+                $$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2 \cdot 5 \cdot 1^1}{\sqrt{100} \cdot 1!} = \frac{10}{\sqrt{100}} = 1$$
+            </p>
+            <p>
+                Using standard generalization bounds, with probability at least 95%, the generalization error is bounded by:
+            </p>
+            <p>
+                $$\text{Error}(f) \leq \hat{\text{Error}}_N(f) + 1 \cdot 1 + \sqrt{\frac{\log(20)}{200}} \approx \hat{\text{Error}}_N(f) + 1.23$$
+            </p>
+            <p>
+                If we achieve a training error of 0.05 (5%), our generalization error is guaranteed to be at most 1.28 (128%). While this worst-case bound may seem loose, in practice, the actual generalization error is typically much lower.
+            </p>
+            <p>
+                The key insight is that by choosing the constraint parameter $$B$$ appropriately, we can directly control the bias-variance tradeoff. A smaller value of $$B$$ (e.g., $$B=1$$) would result in a tighter generalization bound at the cost of potentially higher training error, illustrating the bias-variance tradeoff governed by the Ivanov regularization parameter.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="rademacher_complexity.html">Rademacher Complexity</a></li>
+            <li><a href="binary_classification.html">Binary Classification</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="tikhonov_regularization.html">Tikhonov Regularization</a></li>
+            <li><a href="morozov_regularization.html">Morozov Regularization</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

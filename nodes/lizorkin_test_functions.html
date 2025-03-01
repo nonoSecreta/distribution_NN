@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lizorkin Test Functions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Lizorkin Test Functions</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Lizorkin test functions are highly time-frequency localized functions with all moments equal to zero, forming a crucial mathematical foundation for defining the Radon transform of distributions in the paper's variational framework.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In the analysis of the Radon transform and its applications to neural networks, standard Schwartz functions are insufficient when working with distributions. The paper requires a more specialized space of test functions that allows for the proper definition of the Radon transform and its dual on distribution spaces.
+        </p>
+        <p>
+            Lizorkin test functions serve this critical role by providing a mathematical foundation for extending the Radon transform to distributions, which is essential for establishing the connection between neural networks and variational problems. Without this theory, the paper's central representer theorem could not be properly formulated or proven.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            The Lizorkin test functions on $$\mathbb{R}^d$$, denoted as $$\mathcal{S}_0(\mathbb{R}^d)$$, are defined as a closed subspace of the Schwartz space $$\mathcal{S}(\mathbb{R}^d)$$ consisting of functions with all moments equal to zero:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{S}_0(\mathbb{R}^d) = \{\varphi \in \mathcal{S}(\mathbb{R}^d) : \int_{\mathbb{R}^d} x^\alpha \varphi(x) \, dx = 0 \text{ for all multi-indices } \alpha\}$$</p>
+        </div>
+        <p>
+            Key properties of Lizorkin test functions include:
+        </p>
+        <ul>
+            <li>They form a closed subspace of the Schwartz space $$\mathcal{S}(\mathbb{R}^d)$$</li>
+            <li>All moments of these functions vanish, making them orthogonal to polynomials</li>
+            <li>They are highly localized in both time and frequency domains</li>
+            <li>Their Fourier transforms vanish at the origin (all derivatives)</li>
+            <li>They are dense in many function spaces including $$L^p(\mathbb{R}^d)$$ for $$1 \leq p < \infty$$</li>
+            <li>The Radon transform maps Lizorkin test functions to Lizorkin test functions in the Radon domain (with evenness property)</li>
+        </ul>
+        <p>
+            The dual space of Lizorkin test functions, denoted as $$\mathcal{S}'_0(\mathbb{R}^d)$$, consists of Lizorkin distributions. This space is isomorphic to the quotient space of tempered distributions modulo polynomials:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{S}'_0(\mathbb{R}^d) \cong \mathcal{S}'(\mathbb{R}^d)/\mathcal{P}(\mathbb{R}^d)$$</p>
+        </div>
+        <p>
+            where $$\mathcal{P}(\mathbb{R}^d)$$ is the space of polynomials on $$\mathbb{R}^d$$.
+        </p>
+        <p>
+            In the context of the Radon domain, Lizorkin test functions on $$S^{d-1} \times \mathbb{R}$$ are defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{S}_0(S^{d-1} \times \mathbb{R}) = \mathcal{D}(S^{d-1}) \hat{\otimes} \mathcal{S}_0(\mathbb{R})$$</p>
+        </div>
+        <p>
+            where $$\mathcal{D}(S^{d-1})$$ is the space of smooth functions on $$S^{d-1}$$ and $$\hat{\otimes}$$ denotes the topological tensor product.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                A simple example of a Lizorkin test function in one dimension can be constructed as:
+            </p>
+            <p>
+                $$\varphi(x) = \frac{d^{n+1}}{dx^{n+1}}(e^{-x^2})$$
+            </p>
+            <p>
+                where $$n$$ is chosen large enough to ensure all moments up to a certain order vanish. For instance, with $$n=1$$:
+            </p>
+            <p>
+                $$\varphi(x) = \frac{d^2}{dx^2}(e^{-x^2}) = (4x^2 - 2)e^{-x^2}$$
+            </p>
+            <p>
+                This function has its first moment (and zeroth moment) equal to zero:
+            </p>
+            <p>
+                $$\int_{-\infty}^{\infty} \varphi(x) \, dx = 0$$
+            </p>
+            <p>
+                $$\int_{-\infty}^{\infty} x \varphi(x) \, dx = 0$$
+            </p>
+            <p>
+                In the paper's framework, Lizorkin test functions enable the definition of the Radon transform for distributions, which is crucial for establishing that single-hidden layer neural networks are solutions to the continuous-domain inverse problems with total variation regularization in the Radon domain.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+            <li><a href="tempered_distributions.html">Tempered Distributions</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+            <li><a href="schwartz_space.html">Schwartz Space</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

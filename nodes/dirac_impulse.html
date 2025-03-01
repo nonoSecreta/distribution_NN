@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dirac Impulse</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Dirac Impulse</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The Dirac impulse (or Dirac delta function) is a generalized function representing an infinitely sharp spike with unit area. In the paper, Dirac impulses appear in the Radon domain as the result of applying the operator $R_m$ to neural network neurons, illustrating the sparsification effect that is central to the representer theorem.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The Dirac impulse plays a crucial role in the paper's theoretical framework for several reasons:
+        </p>
+        <ul>
+            <li>It represents the sparsification of neural network neurons in the Radon domain</li>
+            <li>It connects ridge functions to their representations as measures in the Radon domain</li>
+            <li>It provides the building blocks for the sparse solutions in the representer theorem</li>
+            <li>It establishes the link between neural networks and the notion of ridge splines</li>
+        </ul>
+        <p>
+            By showing that neurons are mapped to Dirac impulses by the operator $R_m$, the authors provide a rigorous explanation for why neural networks with specific regularizers learn sparse representations and exhibit good generalization properties.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The Dirac impulse $\delta$ is not a function in the traditional sense but is defined as a distribution (generalized function) with the following key property: for any test function $\varphi$ that is continuous at $x_0$:
+        </p>
+        <div class="definition">
+            <p>$$\langle \delta(\cdot - x_0), \varphi \rangle = \varphi(x_0)$$</p>
+        </div>
+        <p>
+            In other words, the Dirac impulse at $x_0$ acts as the evaluation functional at $x_0$. It can be thought of as an infinitely narrow and infinitely tall spike at $x_0$ with unit integral.
+        </p>
+        <p>
+            Key properties of the Dirac impulse include:
+        </p>
+        <ul>
+            <li>It is the neutral element for convolution: $f * \delta = f$ for any function $f$</li>
+            <li>It is the derivative of the Heaviside step function in the distributional sense</li>
+            <li>Its Fourier transform is the constant function 1</li>
+            <li>It can be viewed as a measure, specifically as a point mass at $x_0$</li>
+        </ul>
+        <p>
+            In the paper, the authors work with Dirac impulses on different domains:
+        </p>
+        <ul>
+            <li>$\delta_{\mathbb{R}^d}$ - Dirac impulse on $\mathbb{R}^d$</li>
+            <li>$\delta_{S^{d-1}\times\mathbb{R}}$ - Dirac impulse on the Radon domain $S^{d-1}\times\mathbb{R}$</li>
+        </ul>
+        <p>
+            A key result in the paper (Lemma 17) shows that applying the operator $R_m$ to a neuron $r_{(w,b)}^{(m)}(x) = \rho_m(w^T x - b)$ yields a Dirac impulse in the Radon domain:
+        </p>
+        <div class="definition">
+            <p>$$R_m r_{(w,b)}^{(m)} = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - z) + (-1)^m \delta_{S^{d-1}\times\mathbb{R}}(\cdot + z)}{2}$$</p>
+        </div>
+        <p>
+            where $z = (w, b) \in S^{d-1} \times \mathbb{R}$. This result is central to the paper's theory, as it explains why the solutions to the variational problem take the form of neural networks.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a ReLU neuron in 2D: $r(x) = \max\{0, w^T x - b\}$ with $w = (1, 0)$ and $b = 0$.
+            </p>
+            <p>
+                This function represents a half-plane, being positive in the right half-plane $(x_1 > 0)$ and zero elsewhere. When applying the operator $R_2 = c_d \partial_t^2 \Lambda_{d-1} \mathcal{R}$, we get:
+            </p>
+            <p>$$R_2 r = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - ((1,0), 0)) + \delta_{S^{d-1}\times\mathbb{R}}(\cdot + ((1,0), 0))}{2}$$</p>
+            <p>
+                This represents a Dirac impulse in the Radon domain at the point $((1,0), 0)$, which corresponds to the vertical line $x_1 = 0$ where the ReLU function has its "hinge."
+            </p>
+            <p>
+                This sparsification effect is illustrated in Figure 3 of the paper, where applying $R_2$ to a 2D ReLU network with 7 neurons results in exactly 7 Dirac impulses in the Radon domain, one for each neuron. This sparse representation in the Radon domain is key to understanding why neural networks with total variation regularization yield solutions with few neurons.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="tempered_distributions.html">Tempered Distributions</a></li>
+            <li><a href="measure_theory.html">Measure Theory</a></li>
+            <li><a href="greens_functions.html">Green's Functions</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

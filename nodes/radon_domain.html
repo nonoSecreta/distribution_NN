@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radon Domain</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Radon Domain</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The Radon domain, $S^{d-1} \times \mathbb{R}$, is the range space of the Radon transform where neural networks have sparse representations, making it the natural setting for the paper's total variation regularization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The Radon domain plays a central role in the paper because it provides a space where neural networks have naturally sparse representations. This sparsity is key to establishing the connection between regularized variational problems and neural network solutions. By applying total variation regularization in the Radon domain, the paper creates a principled framework that promotes solutions with the structure of single-hidden layer neural networks.
+        </p>
+        <p>
+            Understanding the Radon domain and its properties is essential for following the paper's mathematical development, including the definition of the seminorms, the structure of the native spaces, and the derivation of the representer theorem.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            The Radon domain for functions on $\mathbb{R}^d$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$S^{d-1} \times \mathbb{R}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$S^{d-1}$ is the unit sphere in $\mathbb{R}^d$, consisting of all unit vectors</li>
+            <li>$\mathbb{R}$ represents the set of all possible offsets from the origin</li>
+        </ul>
+        <p>
+            Each point $(γ, t) \in S^{d-1} \times \mathbb{R}$ corresponds to a hyperplane in $\mathbb{R}^d$ defined by:
+        </p>
+        <div class="definition">
+            <p>$$\{x \in \mathbb{R}^d : γ^Tx = t\}$$</p>
+        </div>
+        <p>
+            Important properties of the Radon domain include:
+        </p>
+        <ul>
+            <li>It has symmetry: the hyperplanes corresponding to $(γ, t)$ and $(-γ, -t)$ are identical</li>
+            <li>It can be alternatively viewed as $P^d$, the manifold of hyperplanes in $\mathbb{R}^d$</li>
+            <li>For functions in the paper's native space $\mathcal{F}_m$, their image under $R_m$ lies in the space of finite Radon measures $M(S^{d-1} \times \mathbb{R})$</li>
+            <li>The Radon domain has a rich geometric structure that relates to the geometry of functions in the original space</li>
+        </ul>
+        <p>
+            For the analysis in the paper, several spaces related to the Radon domain are important:
+        </p>
+        <ul>
+            <li>$M(S^{d-1} \times \mathbb{R})$: The space of finite Radon measures on the Radon domain</li>
+            <li>$M_{even}(S^{d-1} \times \mathbb{R})$: The space of even measures satisfying $μ(γ, t) = μ(-γ, -t)$</li>
+            <li>$M_{odd}(S^{d-1} \times \mathbb{R})$: The space of odd measures satisfying $μ(γ, t) = -μ(-γ, -t)$</li>
+            <li>$S_0(S^{d-1} \times \mathbb{R})$: The space of Lizorkin test functions on the Radon domain</li>
+        </ul>
+        <p>
+            The paper uses these spaces to define the regularizers and to establish the structure of solutions to the variational problem.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a ridge function in 2D:
+            </p>
+            <p>
+                $$f(x) = \max\{0, w^Tx - b\}$$
+            </p>
+            <p>
+                with $w = (3, 4)$ and $b = 5$.
+            </p>
+            <p>
+                In the original domain $\mathbb{R}^2$, this function creates a "ridge" or "hinge" along the line $3x_1 + 4x_2 = 5$. The function is zero below this line and increases linearly above it.
+            </p>
+            <p>
+                In the Radon domain $S^1 \times \mathbb{R}$, when we apply $R_2 = c_d\partial_t^2\Lambda_{d-1}\mathcal{R}$, this function maps to a Dirac impulse at the point:
+            </p>
+            <p>
+                $$(γ, t) = \left(\frac{w}{\|w\|_2}, \frac{b}{\|w\|_2}\right) = \left(\frac{(3, 4)}{5}, \frac{5}{5}\right) = \left(\frac{3}{5}, \frac{4}{5}, 1\right)$$
+            </p>
+            <p>
+                This demonstrates the sparsifying effect of the operator $R_2$ in the Radon domain. The single neuron in the original space becomes a single Dirac impulse in the Radon domain.
+            </p>
+            <p>
+                Figure 3 in the paper illustrates this visually. A network with 7 ReLU neurons corresponds to 7 Dirac impulses in the Radon domain. These impulses are located at points corresponding to the normalized direction and offset of each neuron's hyperplane.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="radon_inversion.html">Radon Inversion Formula</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="m_norm.html">M-Norm</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="lizorkin_test_functions.html">Lizorkin Test Functions</a></li>
+            <li><a href="tempered_distributions.html">Tempered Distributions</a></li>
+            <li><a href="riesz_markov.html">Riesz-Markov-Kakutani Representation</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

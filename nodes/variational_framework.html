@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variational Framework</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Variational Framework</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The variational framework developed in the paper views neural network learning as a continuous-domain linear inverse problem with total variation regularization in the Radon domain, providing theoretical foundations for understanding the properties of trained neural networks.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Traditional approaches to neural network theory have focused primarily on approximation capabilities and statistical risk bounds. While these perspectives provide valuable insights, they don't fully explain the functional properties of neural networks trained on finite data. The variational framework addresses this gap by casting neural network training as a principled continuous-domain optimization problem.
+        </p>
+        <p>
+            This approach allows us to understand neural networks from a functional analytic perspective, establishing connections to spline theory and providing theoretical justification for commonly used regularization techniques. By viewing neural network training through this lens, we gain insights into why overparameterized networks generalize well and why regularization techniques like weight decay are effective.
+        </p>
+        <h2>Key Components</h2>
+        <p>
+            The variational framework is built around the following continuous-domain inverse problem:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} G(Vf) + \|f\|$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$\mathcal{F}$ is a topological vector space of multivariate functions</li>
+                <li>$V: \mathcal{F} \rightarrow \mathbb{R}^N$ is a continuous linear sensing or measurement operator</li>
+                <li>$G: \mathbb{R}^N \rightarrow \mathbb{R}$ is a convex data fitting term</li>
+                <li>$\|\cdot\|: \mathcal{F} \rightarrow \mathbb{R}_{\geq 0}$ is a (semi)norm or regularizer</li>
+            </ul>
+        </p>
+        <p>
+            The paper introduces a family of seminorms:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{(m)} := c_d\|\partial_t^m\Lambda_{d-1}\mathcal{R}f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$\mathcal{R}$ is the Radon transform</li>
+                <li>$\Lambda_{d-1}$ is a ramp filter in the Radon domain</li>
+                <li>$\partial_t^m$ is the $m$th partial derivative with respect to $t$ (the offset variable)</li>
+                <li>$c_d$ is a dimension-dependent constant</li>
+                <li>$\|\cdot\|_{M(S^{d-1}\times\mathbb{R})}$ is the total variation norm in the sense of measures</li>
+            </ul>
+        </p>
+        <p>
+            To handle technical challenges, the framework introduces:
+        </p>
+        <ul>
+            <li>A native space $\mathcal{F}_m$ consisting of functions with algebraic growth rate $m-1$ whose image under $R_m$ is a finite Radon measure</li>
+            <li>A null space $\mathcal{N}_m$ consisting of polynomials of degree strictly less than $m$</li>
+            <li>A direct-sum topology that equips $\mathcal{F}_m$ with a Banach space structure</li>
+            <li>A stable right inverse of the operator $R_m$</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider fitting a function to data points $\{(x_n, y_n)\}_{n=1}^N$ using squared error loss and a variational regularizer:
+            </p>
+            <p>
+                $$\min_{f\in\mathcal{F}_m} \sum_{n=1}^N (f(x_n) - y_n)^2 + \lambda\|f\|_{(m)}$$
+            </p>
+            <p>
+                This looks like an infinite-dimensional problem since we're optimizing over a function space. However, the paper's variational framework shows that this problem has a finite-dimensional solution—specifically, a single-hidden layer neural network:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\rho_m(w_k^Tx - b_k) + c(x)$$
+            </p>
+            <p>
+                where $K \leq N$, and $c(x)$ is a polynomial of degree less than $m$. For example, with $m=2$ (ReLU activation), the solution takes the form:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$
+            </p>
+            <p>
+                This provides theoretical justification for why neural networks with relatively few neurons can represent optimal solutions to functional variational problems.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

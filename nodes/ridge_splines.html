@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridge Splines</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Ridge Splines</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Ridge splines are a novel class of multivariate splines that correspond to single-hidden layer neural networks with truncated power activation functions, forming a bridge between neural networks and classical spline theory.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Splines and neural networks have largely evolved as separate mathematical tools despite sharing many functional similarities. Establishing a formal connection between these tools helps transfer insights between these fields, provides theoretical justifications for neural network regularization, and enables a deeper understanding of the properties of functions learned by neural networks.
+        </p>
+        <p>
+            While classical univariate splines are well-studied with strong theoretical foundations, multivariate splines (especially those corresponding to neural networks) have been less thoroughly characterized. The concept of ridge splines bridges this gap, showing that neural networks are effectively multivariate splines operating on ridge functions, inheriting many of the desirable properties of classical splines.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            The paper defines an mth-order polynomial ridge spline as a function $$s: \mathbb{R}^d \to \mathbb{R}$$ satisfying:
+        </p>
+        <div class="definition">
+            <p>$$R_m\{s\} = \sum_{k=1}^K v_k\left[\frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - z_k) + (-1)^m\delta_{S^{d-1}\times\mathbb{R}}(\cdot + z_k)}{2}\right]$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$$R_m = c_d\partial_t^m\Lambda_{d-1}\mathcal{R}$$ is the operator combining the Radon transform with a ramp filter and derivatives</li>
+                <li>$$v_k$$ are weights</li>
+                <li>$$z_k = (w_k, b_k) \in S^{d-1} \times \mathbb{R}$$ are the "knots" in the Radon domain</li>
+                <li>$$\delta_{S^{d-1}\times\mathbb{R}}$$ is the Dirac impulse on the Radon domain</li>
+            </ul>
+        </p>
+        <p>
+            This definition mirrors the classical definition of splines, where the Radon domain operator $$R_m$$ "sparsifies" the ridge spline, similar to how the derivative operator sparsifies classical splines. Key properties include:
+        </p>
+        <ul>
+            <li>A ridge spline with operator $$R_m$$ corresponds to a single-hidden layer neural network with the truncated power activation function $$\rho_m = \frac{\max\{0,\cdot\}^{m-1}}{(m-1)!}$$</li>
+            <li>For $$m=2$$, ridge splines correspond to ReLU networks</li>
+            <li>In the univariate case ($$d=1$$), ridge splines exactly coincide with classical polynomial splines</li>
+            <li>Ridge splines can be viewed as a continuum of univariate polynomial splines in the Radon domain</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a cubic ridge spline ($$m=4$$) in two dimensions. This corresponds to a single-hidden layer neural network with activation function $$\rho_4(t) = \frac{\max\{0,t\}^3}{6}$$, which grows as the cube of the input for positive values and is zero otherwise.
+            </p>
+            <p>
+                The spline can be expressed as:
+            </p>
+            <p>
+                $$s(x) = \sum_{k=1}^K v_k\frac{\max\{0, w_k^Tx - b_k\}^3}{6} + c(x)$$
+            </p>
+            <p>
+                where $$c(x)$$ is a polynomial of degree at most 3.
+            </p>
+            <p>
+                When we apply the operator $$R_4$$ to this function, it "sparsifies" the spline, resulting in a sum of Dirac impulses in the Radon domain at the locations $$(w_k, b_k)$$. This is analogous to how taking the fourth derivative of a cubic spline in one dimension yields a sum of Dirac impulses at the knot locations.
+            </p>
+            <p>
+                The paper illustrates this visually in Figure 2, showing a two-dimensional cubic ridge spline with 7 neurons. After applying $$R_4$$, the result is 7 Dirac impulses in the Radon domain, corresponding to the "knots" of the spline.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+            <li><a href="polynomial_ridge_splines.html">Polynomial Ridge Splines</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="scattered_data.html">Scattered Data Approximation</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

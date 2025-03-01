@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Training</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Neural Network Training</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The paper shows that neural network training with appropriate regularization is equivalent to solving a variational problem with total variation regularization in the Radon domain, providing theoretical justification for weight decay and path-$\text{norm}$ regularization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In practice, neural networks are trained using regularization techniques like weight decay or path-$\text{norm}$ regularization to improve generalization. However, there has been limited theoretical understanding of why these regularization approaches work well and what functional properties they promote in the learned functions.
+        </p>
+        <p>
+            The paper establishes a formal link between these practical training methods and an elegant mathematical framework based on variational theory. This connection provides insights into the functional characteristics of trained neural networks and helps explain why regularized neural networks generalize well despite being overparameterized.
+        </p>
+        <h2>Key Results</h2>
+        <p>
+            The paper shows that the continuous-domain variational problem
+        </p>
+        <div class="definition">
+            <p>$$\min_{f\in\mathcal{F}_m} G(Vf) + \|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            can be recast as a finite-dimensional neural network training problem:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta\in\Theta} G(Vf_\theta) + \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+        </div>
+        <p>
+            where $f_\theta(x) = \sum_{k=1}^K v_k\rho_m(w_k^Tx - b_k) + c(x)$ is a neural network with parameters $\theta$.
+        </p>
+        <p>
+            Furthermore, this problem is equivalent to:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta\in\Theta} G(Vf_\theta) + \frac{1}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^{2m-2})$$</p>
+        </div>
+        <p>
+            These equivalences provide theoretical justification for common regularization practices:
+        </p>
+        <ul>
+            <li><strong>Path-$\text{Norm}$ Regularization:</strong> The first formulation corresponds to the $\ell_1$-path-$\text{norm}$ regularization as proposed by Neyshabur et al. (2015).</li>
+            <li><strong>Weight Decay:</strong> The second formulation corresponds to weight decay regularization as proposed by Krogh and Hertz (1992).</li>
+        </ul>
+        <p>
+            Importantly, the paper shows that these regularization approaches are intrinsically tied to the activation function used. For ReLU networks ($m=2$), the regularization term exactly matches traditional weight decay and path-$\text{norm}$ regularizers. For other activation functions, the paper suggests using variants where the exponent depends on the algebraic growth rate of the activation function.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider training a ReLU network ($m=2$) to fit data points $\{(x_n, y_n)\}_{n=1}^N$. The paper shows that the following problems are equivalent:
+            </p>
+            <p><strong>Variational problem:</strong></p>
+            <p>$$\min_{f\in\mathcal{F}_2} \sum_{n=1}^N (f(x_n) - y_n)^2 + \lambda\|R_2 f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+            <p><strong>Path-$\text{norm}$ regularization:</strong></p>
+            <p>$$\min_{\theta\in\Theta} \sum_{n=1}^N (f_\theta(x_n) - y_n)^2 + \lambda\sum_{k=1}^K |v_k|\|w_k\|_2$$</p>
+            <p><strong>Weight decay:</strong></p>
+            <p>$$\min_{\theta\in\Theta} \sum_{n=1}^N (f_\theta(x_n) - y_n)^2 + \frac{\lambda}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^2)$$</p>
+            <p>
+                Each of these approaches leads to the same optimal function, which is a single-hidden layer ReLU network with at most $N$ neurons (plus a linear term). This explains why weight decay works so well in practice - it's implicitly minimizing a principled functional semi$\text{norm}$.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="scattered_data.html">Scattered Data Approximation</a></li>
+            <li><a href="binary_classification.html">Binary Classification</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

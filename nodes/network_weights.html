@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Weights & Bias</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Network Weights & Bias</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Network weights and biases are the learnable parameters of a neural network that determine its behavior, with the paper establishing a deep connection between weight regularization strategies and total variation in the Radon domain, providing new insights into how these parameters affect generalization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Network weights and biases constitute the fundamental parameters that are adjusted during neural network training. Understanding their roles, constraints, and effects on the network's behavior is crucial for developing effective training strategies and regularization methods. In the context of single-hidden layer networks, these parameters have a particularly elegant geometric interpretation, directly defining the orientation and position of hyperplanes in the input space.
+        </p>
+        <p>
+            Parhi and Nowak's paper provides a novel perspective on network weights by connecting their properties to functional analysis concepts. The authors demonstrate that regularizing network weights in specific ways corresponds to controlling the complexity of the represented function in mathematically precise terms. This insight helps explain why common weight regularization techniques like weight decay and path-norm are effective, and suggests how they should be adapted based on the chosen activation function.
+        </p>
+        <h2>Parameter Roles and Properties</h2>
+        <p>
+            In a single-hidden layer neural network of the form:
+        </p>
+        <div class="definition">
+            <p>$$f(x) = \sum_{k=1}^K v_k \rho(w_k^T x - b_k) + c(x)$$</p>
+        </div>
+        <p>
+            The parameters have the following roles and properties:
+        </p>
+        <h3>Input Layer Weights ($$w_k$$)</h3>
+        <ul>
+            <li>Represent the direction vectors of hyperplanes in the input space</li>
+            <li>Determine the orientation of the activation functions' "response regions"</li>
+            <li>For single-hidden layer networks, their magnitude can be absorbed into output weights due to activation function homogeneity</li>
+            <li>In the paper's formulation, $$w_k \in \mathbb{R}^d \setminus \{0\}$$ with a common normalization to $$w_k \in S^{d-1}$$ (unit sphere)</li>
+        </ul>
+        <h3>Bias Terms ($$b_k$$)</h3>
+        <ul>
+            <li>Determine the offset and position of hyperplanes in the input space</li>
+            <li>Control the activation threshold of each neuron</li>
+            <li>In the paper's framework, they have a proven bound related to the data: $$|b_k| \leq \max_{n=1,...,N} \|x_n\|_2$$</li>
+            <li>Act as "knots" in the ridge spline interpretation, analogous to the knots in traditional splines</li>
+        </ul>
+        <h3>Output Layer Weights ($$v_k$$)</h3>
+        <ul>
+            <li>Determine the contribution magnitude of each neuron to the final output</li>
+            <li>Control the "height" of each ridge function in the superposition</li>
+            <li>Their signs determine whether a neuron provides a positive or negative contribution</li>
+        </ul>
+        <p>
+            The paper establishes several key theoretical results regarding these parameters:
+        </p>
+        <ul>
+            <li>
+                <strong>Normalization Property</strong>: Due to the homogeneity of the truncated power activation functions, any network can be reparameterized with weights on the unit sphere:
+                <div class="definition">
+                    <p>$$f(x) = \sum_{k=1}^K v_k\|w_k\|_2^{m-1} \rho_m\left(\frac{w_k^T}{\|w_k\|_2}x - \frac{b_k}{\|w_k\|_2}\right) + c(x)$$</p>
+                </div>
+                This allows a simplification without loss of generality: $$w_k \in S^{d-1}$$.
+            </li>
+            <li>
+                <strong>Seminorm Equivalence</strong>: The total variation seminorm of the function in the Radon domain equals a weighted sum of parameter norms:
+                <div class="definition">
+                    <p>$$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+                </div>
+            </li>
+            <li>
+                <strong>Bias Bound</strong>: For optimal solutions with bounded total variation, the bias terms satisfy:
+                <div class="definition">
+                    <p>$$|b_k| \leq \max_{n=1,...,N} \|x_n\|_2$$</p>
+                </div>
+                This provides a theoretical justification for weight constraint practices.
+            </li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a 2D binary classification problem where we use a ReLU network ($$m=2$$) with 3 neurons. Our model is:
+            </p>
+            <p>
+                $$f(x) = v_1\max\{0, w_1^T x - b_1\} + v_2\max\{0, w_2^T x - b_2\} + v_3\max\{0, w_3^T x - b_3\} + u^T x + s$$
+            </p>
+            <p>
+                Let's say after training with appropriate regularization, we obtain these parameters:
+            </p>
+            <ul>
+                <li>$$w_1 = (0.6, 0.8)$$, $$b_1 = 0.5$$, $$v_1 = 2.0$$</li>
+                <li>$$w_2 = (-0.7, 0.7)$$, $$b_2 = -0.3$$, $$v_2 = -1.5$$</li>
+                <li>$$w_3 = (0.1, -0.99)$$, $$b_3 = 0.7$$, $$v_3 = 1.2$$</li>
+                <li>$$u = (0.1, 0.2)$$, $$s = -0.1$$</li>
+            </ul>
+            <p>
+                Geometrically, each pair $$(w_k, b_k)$$ defines a line in the 2D space:
+            </p>
+            <ul>
+                <li>Line 1: $$0.6x_1 + 0.8x_2 = 0.5$$</li>
+                <li>Line 2: $$-0.7x_1 + 0.7x_2 = -0.3$$</li>
+                <li>Line 3: $$0.1x_1 - 0.99x_2 = 0.7$$</li>
+            </ul>
+            <p>
+                These lines partition the space into regions. The ReLU activation "turns on" when we cross from the negative to the positive side of each line, creating a piecewise linear decision boundary. The weights $$v_k$$ determine how steeply the function changes when crossing each line.
+            </p>
+            <p>
+                According to the paper's theory, the total variation seminorm of this function equals:
+            </p>
+            <p>
+                $$\|R_2 f\|_{M(S^{1}\times\mathbb{R})} = |v_1|\|w_1\|_2 + |v_2|\|w_2\|_2 + |v_3|\|w_3\|_2$$
+            </p>
+            <p>
+                $$= 2.0 \cdot 1.0 + 1.5 \cdot 1.0 + 1.2 \cdot 1.0 = 4.7$$
+            </p>
+            <p>
+                (Note that we've normalized the $$w_k$$ to have unit norm for simplicity.)
+            </p>
+            <p>
+                If we had used weight decay regularization with parameter $$\lambda$$, we would have added the term:
+            </p>
+            <p>
+                $$\frac{\lambda}{2}(|v_1|^2 + \|w_1\|_2^2 + |v_2|^2 + \|w_2\|_2^2 + |v_3|^2 + \|w_3\|_2^2)$$
+            </p>
+            <p>
+                to our training objective. The paper proves that this is equivalent to controlling the total variation seminorm, which in turn controls the generalization error.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="single_hidden_layer.html">Single Hidden Layer Networks</a></li>
+            <li><a href="activation_functions.html">Activation Functions</a></li>
+        </ul>
+        <h3>Regularization Connections</h3>
+        <ul>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

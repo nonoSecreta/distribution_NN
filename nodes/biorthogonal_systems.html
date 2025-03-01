@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biorthogonal Systems</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Biorthogonal Systems</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Biorthogonal systems provide a structured way to represent elements of finite-dimensional spaces, playing a crucial role in the paper's proof of the representer theorem by enabling the construction of stable right inverses for the operator $$R_m$$.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In functional analysis and variational problems, it's often necessary to construct specialized operators that satisfy specific properties. Biorthogonal systems provide a powerful tool for this purpose, particularly when dealing with finite-dimensional spaces.
+        </p>
+        <p>
+            In the context of the paper, biorthogonal systems are used to construct a stable right inverse of the operator $$R_m$$, which is a critical step in proving the representer theorem. This construction enables the authors to decompose the native space as a direct sum, characterize the structure of solutions, and ultimately show that single-hidden layer neural networks solve the variational problem.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            Let $$\mathcal{N}$$ be a finite-dimensional space with dimension $$N_0$$. A biorthogonal system for $$\mathcal{N}$$ is a pair $$(\phi, p) = \{(\phi_n, p_n)\}_{n=1}^{N_0}$$ where:
+        </p>
+        <ul>
+            <li>$$\{p_n\}_{n=1}^{N_0}$$ is a basis of $$\mathcal{N}$$</li>
+            <li>$$\phi = (\phi_1, \ldots, \phi_{N_0})$$ is a vector of functionals, where each $$\phi_n$$ belongs to the continuous dual space $$\mathcal{N}'$$</li>
+            <li>The functionals and basis elements satisfy the biorthogonality condition: $$\langle \phi_k, p_n \rangle = \delta[k - n]$$ for $$k, n = 1, \ldots, N_0$$, where $$\delta[\cdot]$$ is the Kronecker delta</li>
+        </ul>
+        <p>
+            The key property of a biorthogonal system is that any element $$q \in \mathcal{N}$$ has a unique representation:
+        </p>
+        <div class="definition">
+            <p>$$q = \sum_{n=1}^{N_0} \langle \phi_n, q \rangle p_n$$</p>
+        </div>
+        <p>
+            In the paper, the authors use a biorthogonal system for the null space $$\mathcal{N}_m$$ of the operator $$R_m$$. This null space consists of polynomials of degree less than $$m$$, and is finite-dimensional (Lemma 19 in the paper).
+        </p>
+        <p>
+            Using this biorthogonal system, the authors construct a stable right inverse operator $$R_{m,\phi}^{-1}$$ that maps measures in the Radon domain to functions in the native space, satisfying:
+        </p>
+        <ol>
+            <li>$$R_m R_{m,\phi}^{-1} \psi = \psi$$ (right-inverse property)</li>
+            <li>$$\phi(R_{m,\phi}^{-1} \psi) = 0$$ (boundary conditions)</li>
+        </ol>
+        <p>
+            The kernel of this operator has the form:
+        </p>
+        <div class="definition">
+            <p>$$g_{m,\phi}(x, z) = r_z^{(m)}(x) - \sum_{n=1}^{N_0} p_n(x)q_n(z)$$</p>
+        </div>
+        <p>
+            where $$r_z^{(m)}(x) = \rho_m(w^T x - b)$$ and $$q_n(z) = \langle \phi_n, r_z^{(m)} \rangle$$.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                To illustrate the concept of biorthogonal systems, let's consider the case of $$m=2$$, where the null space $$\mathcal{N}_2$$ consists of linear functions:
+            </p>
+            <p>
+                $$\mathcal{N}_2 = \{q(x) = u^T x + s : u \in \mathbb{R}^d, s \in \mathbb{R}\}$$
+            </p>
+            <p>
+                This space has dimension $$N_0 = d+1$$. A natural basis for this space is:
+            </p>
+            <p>
+                $$p_1(x) = 1, p_2(x) = x_1, p_3(x) = x_2, \ldots, p_{d+1}(x) = x_d$$
+            </p>
+            <p>
+                To construct a biorthogonal system, we need functionals $$\phi_n$$ that satisfy $$\langle \phi_k, p_n \rangle = \delta[k - n]$$. One possible choice is:
+            </p>
+            <p>
+                $$\phi_1(f) = f(0), \phi_2(f) = \frac{\partial f}{\partial x_1}(0), \ldots, \phi_{d+1}(f) = \frac{\partial f}{\partial x_d}(0)$$
+            </p>
+            <p>
+                With this biorthogonal system, any linear function $$q(x) = u^T x + s$$ can be uniquely represented as:
+            </p>
+            <p>
+                $$q(x) = \langle \phi_1, q \rangle p_1(x) + \sum_{i=1}^d \langle \phi_{i+1}, q \rangle p_{i+1}(x) = s \cdot 1 + \sum_{i=1}^d u_i \cdot x_i$$
+            </p>
+            <p>
+                In the proof of the representer theorem, the authors use a specific biorthogonal system derived from the measurement operator. They identify a subset of $$N_0$$ measurements that are linearly independent with respect to $$\mathcal{N}_m$$, and use these to construct the biorthogonal system.
+            </p>
+            <p>
+                This construction enables them to split the optimization problem into a part involving the null space and a part involving the Radon domain, ultimately showing that the solution is a single-hidden layer neural network with at most $$N - N_0$$ neurons (plus a polynomial term from the null space).
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+            <li><a href="direct_sum_topology.html">Direct-Sum Topology</a></li>
+            <li><a href="linear_operators.html">Linear Operators</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

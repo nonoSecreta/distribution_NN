@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection to Univariate Splines</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Connection to Univariate Splines</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The paper establishes a fundamental connection between ridge splines and classical univariate polynomial splines, showing that in the one-dimensional case (d=1), polynomial ridge splines exactly coincide with classical univariate polynomial splines.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Understanding the connection between ridge splines and univariate splines provides important insight into the nature of ridge splines and helps situate them within the well-established theory of splines. This connection highlights that ridge splines are a natural multivariate extension of classical univariate splines, which have been extensively studied and applied in various contexts.
+        </p>
+        <p>
+            By establishing this correspondence, the authors demonstrate that their framework naturally extends traditional spline theory to the context of neural networks, providing a theoretically sound foundation for understanding regularized neural networks.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The paper shows that when the dimension d=1, the seminorm used in the variational framework:
+        </p>
+        <div class="definition">
+            <p>$$\|R_m f\|_{M(S^{d-1} \times \mathbb{R})} = c_d \left\|\partial_t^m \Lambda_{d-1} \mathcal{R}f\right\|_{M(S^{d-1} \times \mathbb{R})}$$</p>
+        </div>
+        <p>
+            reduces to the classical seminorm for univariate splines:
+        </p>
+        <div class="definition">
+            <p>$$\|D^m f\|_{M(\mathbb{R})}$$</p>
+        </div>
+        <p>
+            where $D^m$ is the $m$-th derivative operator in the univariate case.
+        </p>
+        <p>
+            The equivalence is established through the following steps:
+            <ul>
+                <li>When $d=1$, we have $c_d = 1/2$ and the unit sphere $S^0 = \{-1, +1\}$</li>
+                <li>The Radon transform simplifies to $\mathcal{R}\{f\}(\gamma, t) = f(t/\gamma)$</li>
+                <li>The ramp filter $\Lambda_{d-1}$ becomes trivial (identity) when $d=1$</li>
+                <li>This gives us: $c_d\|\partial_t^m \Lambda_{d-1} \mathcal{R}f\|_{M(S^{d-1} \times \mathbb{R})} = \frac{1}{2}\sum_{\gamma \in \{-1,+1\}} \|D^m f(\cdot/\gamma)\|_{M(\mathbb{R})} = \|D^m f\|_{M(\mathbb{R})}$</li>
+            </ul>
+        </p>
+        <p>
+            As a result, in the one-dimensional case:
+            <ul>
+                <li>The variational problem studied in the paper becomes the classical polynomial spline fitting problem</li>
+                <li>The ridge spline solutions become classical polynomial splines</li>
+                <li>The "knots" of the ridge spline correspond exactly to the traditional knots of univariate splines</li>
+            </ul>
+        </p>
+        <p>
+            This equivalence implies that training a univariate neural network with the appropriate regularization results in a function that is exactly a classical polynomial spline interpolation of the data.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider fitting a univariate function to data points $\{(x_n, y_n)\}_{n=1}^N$ with a regularized neural network:
+            </p>
+            <p>$$f(x) = \sum_{k=1}^K v_k \rho_m(w_k x - b_k) + c(x)$$</p>
+            <p>
+                where $\rho_m(t) = \max\{0,t\}^{m-1}/(m-1)!$ and $c(x)$ is a polynomial of degree less than $m$.
+            </p>
+            <p>
+                When $d=1$, this becomes equivalent to fitting a classical polynomial spline of order $m$ to the data. For instance, when $m=4$ (cubic splines), the solution is a piecewise cubic polynomial with continuous second derivatives at the knot locations.
+            </p>
+            <p>
+                The paper notes that these splines are, in fact, the well-known locally adaptive regression splines of Mammen and van de Geer (1997), which are known to have excellent statistical properties.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="polynomial_ridge_splines.html">Polynomial Ridge Splines</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="l_splines.html">L-Splines</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="scattered_data_approximation.html">Scattered Data Approximation</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

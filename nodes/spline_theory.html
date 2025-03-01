@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spline Theory</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Spline Theory</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Spline theory provides the mathematical foundation connecting neural networks to classical interpolation methods, offering insights into the structural properties of functions that minimize certain variational problems.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Splines have a rich history in approximation theory and numerical analysis, offering efficient and elegant solutions to interpolation and approximation problems. By connecting neural networks to spline theory, the paper establishes a bridge between these seemingly disparate fields, providing theoretical insights into why neural networks work well and offering principled approaches to regularization.
+        </p>
+        <p>
+            Understanding the connection to spline theory also helps explain why neural networks excel at learning smooth functions from limited data, as splines are known to provide optimal solutions to certain interpolation problems while maintaining desirable smoothness properties. This connection strengthens our theoretical understanding of neural networks and inspires novel architecture and training approaches.
+        </p>
+        <h2>Key Concepts</h2>
+        <p>
+            Classical spline theory centers around variational problems of the form:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} G(Vf) + \|Lf\|_{M(\mathbb{R}^d)}$$</p>
+        </div>
+        <p>
+            where $L$ is a differential operator, and $\|Lf\|_{M(\mathbb{R}^d)}$ is the total variation norm of $Lf$ in the sense of measures. Solutions to these problems are known as $L$-splines.
+        </p>
+        <p>
+            Key concepts from spline theory that appear in the paper include:
+        </p>
+        <ul>
+            <li><strong>Variational formulation:</strong> Splines arise as solutions to optimization problems balancing data fidelity with smoothness constraints</li>
+            <li><strong>Representer theorems:</strong> Classical results showing that optimal solutions have specific parametric forms</li>
+            <li><strong>Native spaces:</strong> Function spaces associated with differential operators, providing the appropriate setting for variational problems</li>
+            <li><strong>Null spaces:</strong> The set of functions annihilated by an operator, often corresponding to polynomial terms in spline solutions</li>
+            <li><strong>Green's functions:</strong> Functions that serve as the building blocks of spline solutions, analogous to neurons in neural networks</li>
+        </ul>
+        <p>
+            The paper extends these concepts to the setting of ridge splines by:
+        </p>
+        <ul>
+            <li>Replacing the differential operator $L$ with $R_m = c_d\partial_t^m\Lambda_{d-1}\mathcal{R}$, combining the Radon transform with derivatives and filtering</li>
+            <li>Showing that ridge splines (single-hidden layer neural networks) are the $R_m$-splines corresponding to this operator</li>
+            <li>Establishing that the null space of $R_m$ consists of polynomials of degree less than $m$</li>
+            <li>Demonstrating that ridge functions with truncated power activation serve as Green's functions for $R_m$</li>
+        </ul>
+        <p>
+            A crucial result is that in the univariate case ($d=1$), ridge splines exactly coincide with classical polynomial splines. This provides a natural multivariate generalization of univariate splines through the lens of neural networks.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the classical cubic spline interpolation problem in one dimension. Given data points $\{(x_n, y_n)\}_{n=1}^N$, we seek a function that:
+            </p>
+            <ol>
+                <li>Passes through all data points: $f(x_n) = y_n$ for $n = 1, \ldots, N$</li>
+                <li>Minimizes the total curvature: $\min \int |f''(x)|^2 dx$</li>
+            </ol>
+            <p>
+                The solution is a cubic spline: a piecewise cubic polynomial that is twice continuously differentiable at the knots (where the polynomial pieces join).
+            </p>
+            <p>
+                In the paper's framework, this corresponds to the problem:
+            </p>
+            <p>
+                $$\min_{f \in \mathcal{F}_4} \sum_{n=1}^N (f(x_n) - y_n)^2 + \lambda\|D^4f\|_{M(\mathbb{R})}$$
+            </p>
+            <p>
+                where $D^4$ is the fourth derivative operator. The solution takes the form:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\frac{(x-b_k)_+^3}{6} + c_0 + c_1x + c_2x^2 + c_3x^3$$
+            </p>
+            <p>
+                with $K \leq N$, where $(x)_+ = \max\{0, x\}$.
+            </p>
+            <p>
+                The paper shows that the multivariate analogue of this, using the operator $R_4$ instead of $D^4$, is:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\frac{\max\{0, w_k^Tx - b_k\}^3}{6} + \text{(polynomial of degree < 4)}$$
+            </p>
+            <p>
+                This is exactly a single-hidden layer neural network with cubic activation function plus a polynomial term. The paper thus reveals that neural networks are the natural multivariate generalization of classical splines.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="l_splines.html">L-Splines</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="scattered_data.html">Scattered Data Approximation</a></li>
+            <li><a href="function_approximation.html">Function Approximation</a></li>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct-Sum Topology</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Direct-Sum Topology</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Direct-sum topology is a mathematical construction used in the paper to establish the Banach space structure of the native space for the operator $$R_m$$, enabling a complete characterization of the neural network representer theorem.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The representer theorem for neural networks requires a proper topological framework to ensure that the optimization problems have well-defined solutions. A key challenge in the paper is characterizing the native space $$\mathcal{F}_m$$ of the operator $$R_m$$, as this space contains all the functions representable by single-hidden layer neural networks.
+        </p>
+        <p>
+            By endowing this native space with a direct-sum topology, the authors establish that it forms a Banach space. This topological structure provides the necessary theoretical foundation for proving the existence of solutions to the variational problem, the uniqueness of the null space component, and the sparsity properties of the solutions. Without this topology, the entire variational framework would lack the mathematical rigor needed to guarantee that neural networks are indeed solutions to the inverse problems studied.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A direct-sum topology for a vector space $$X$$ that can be decomposed as $$X = Y \oplus Z$$ (where $$\oplus$$ denotes the direct sum) is constructed by combining the topologies of the component spaces $$Y$$ and $$Z$$.
+        </p>
+        <p>
+            In the context of the paper, the authors establish that:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}_m = \mathcal{F}_{m,\phi} \oplus \mathcal{N}_m$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\mathcal{F}_m$$ is the native space of the operator $$R_m$$</li>
+            <li>$$\mathcal{F}_{m,\phi} = \{f \in \mathcal{F}_m : \phi(f) = 0\}$$ is the subspace of functions satisfying certain boundary conditions</li>
+            <li>$$\mathcal{N}_m$$ is the null space of $$R_m$$ (the space of polynomials of degree less than $$m$$)</li>
+            <li>$$\phi$$ is a vector of functionals forming a biorthogonal system with a basis of $$\mathcal{N}_m$$</li>
+        </ul>
+        <p>
+            The direct-sum topology endows $$\mathcal{F}_m$$ with the following norm:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{\mathcal{F}_m} := \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} + \|\phi(f)\|_2$$</p>
+        </div>
+        <p>
+            This norm combines:
+        </p>
+        <ul>
+            <li>The total variation norm in the Radon domain ($$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$) measuring the complexity of the non-polynomial part</li>
+            <li>The Euclidean norm of the coefficients of the polynomial part ($$\|\phi(f)\|_2$$)</li>
+        </ul>
+        <p>
+            Key properties of this direct-sum topology include:
+        </p>
+        <ul>
+            <li>It makes $$\mathcal{F}_m$$ a complete normed vector space (i.e., a Banach space)</li>
+            <li>It enables a unique representation of each function $$f \in \mathcal{F}_m$$ as $$f = R^{-1}_{m,\phi}u + q$$, where $$u = R_m f$$ and $$q \in \mathcal{N}_m$$</li>
+            <li>It provides a framework for the convergence of optimization algorithms</li>
+            <li>It ensures that the native space $$\mathcal{F}_m$$ is rich enough to contain all functions representable by neural networks, yet restrictive enough to guarantee that neural networks are optimal solutions</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the case where $$m=2$$ (corresponding to ReLU networks). The native space $$\mathcal{F}_2$$ can be decomposed as:
+            </p>
+            <p>
+                $$\mathcal{F}_2 = \mathcal{F}_{2,\phi} \oplus \mathcal{N}_2$$
+            </p>
+            <p>
+                where $$\mathcal{N}_2$$ is the space of affine functions (polynomials of degree at most 1):
+            </p>
+            <p>
+                $$\mathcal{N}_2 = \{x \mapsto u^Tx + s : u \in \mathbb{R}^d, s \in \mathbb{R}\}$$
+            </p>
+            <p>
+                A function $$f \in \mathcal{F}_2$$ can be uniquely represented as:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$
+            </p>
+            <p>
+                where the first term (the ReLU network part) belongs to $$\mathcal{F}_{2,\phi}$$ and the second term (the affine function) belongs to $$\mathcal{N}_2$$.
+            </p>
+            <p>
+                The norm of $$f$$ in the direct-sum topology is:
+            </p>
+            <p>
+                $$\|f\|_{\mathcal{F}_2} = \sum_{k=1}^K |v_k|\|w_k\|_2 + \sqrt{\|u\|_2^2 + s^2}$$
+            </p>
+            <p>
+                This measures both the complexity of the ReLU part via the total variation in the Radon domain and the linear part via a standard Euclidean norm. This decomposition is crucial for the representer theorem, as it guarantees that solutions to the variational problem can be expressed as neural networks with a specific structure.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="biorthogonal_systems.html">Biorthogonal Systems</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+            <li><a href="linear_operators.html">Linear Operators</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

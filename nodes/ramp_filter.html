@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramp Filter</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Ramp Filter</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The ramp filter is a key component of the Radon inversion formula that applies a high-pass filtering operation in the Radon domain, critical for both tomographic reconstruction and the neural network framework developed in the paper.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The ramp filter arises naturally in the process of inverting the Radon transform, where it serves to compensate for the inherent oversampling of low-frequency components that occurs during the Radon transform. Without this filtering step, direct backprojection would result in blurred reconstructions.
+        </p>
+        <p>
+            In the paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines," the ramp filter appears in the definition of the operator $$R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$$, which maps functions to their "sparse" representations in the Radon domain. Understanding the ramp filter is crucial for grasping how this operator connects neural networks to functions of bounded variation in the Radon domain.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The ramp filter $$\Lambda_d$$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\Lambda_d\{\Phi\}(\gamma, t) = 
+            \begin{cases} 
+            \partial_t^d \Phi(\gamma, t), & \text{if } d \text{ is even} \\
+            H_t \partial_t^d \Phi(\gamma, t), & \text{if } d \text{ is odd}
+            \end{cases}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\Phi(\gamma, t)$$ is a function in the Radon domain</li>
+            <li>$$\partial_t^d$$ denotes the $$d$$th partial derivative with respect to $$t$$</li>
+            <li>$$H_t$$ is the Hilbert transform with respect to $$t$$</li>
+        </ul>
+        <p>
+            The ramp filter is most easily understood in the frequency domain. If we take the Fourier transform with respect to the offset variable $$t$$ (denoted by $$\hat{\cdot}$$), the ramp filter becomes a multiplication:
+        </p>
+        <div class="definition">
+            <p>$$\hat{\Lambda_d\{\Phi\}}(\gamma, \omega) = (i\omega)^d|\omega|^d\hat{\Phi}(\gamma, \omega)$$</p>
+        </div>
+        <p>
+            This shows that the ramp filter amplifies high-frequency components proportionally to $$|\omega|^d$$, giving it its characteristic "ramp" shape in the frequency domain.
+        </p>
+        <p>
+            The ramp filter plays a crucial role in the Radon inversion formula:
+        </p>
+        <div class="definition">
+            <p>$$f = \frac{1}{2(2\pi)^{d-1}} \mathcal{R}^* \Lambda_{d-1} \mathcal{R} f$$</p>
+        </div>
+        <p>
+            where $$\mathcal{R}^*$$ is the dual Radon transform. Without the ramp filter $$\Lambda_{d-1}$$, direct application of $$\mathcal{R}^*$$ to $$\mathcal{R}f$$ would result in a blurred version of $$f$$.
+        </p>
+        <p>
+            The ramp filter is also related to the Laplacian operator through the intertwining relations:
+        </p>
+        <div class="definition">
+            <p>$$(-\Delta)^{\frac{d-1}{2}} \mathcal{R}^* = \mathcal{R}^* \Lambda_{d-1} \quad \text{and} \quad \mathcal{R}(-\Delta)^{\frac{d-1}{2}} = \Lambda_{d-1} \mathcal{R}$$</p>
+        </div>
+        <p>
+            These relations show that applying the ramp filter in the Radon domain is equivalent to applying a fractional power of the negative Laplacian in the spatial domain.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple example in two dimensions ($$d=2$$). For a function $$f$$ on $$\mathbb{R}^2$$, the Radon transform $$\mathcal{R}f(\gamma, t)$$ gives the line integrals of $$f$$ along lines with normal vector $$\gamma$$ and distance $$t$$ from the origin.
+            </p>
+            <p>
+                To recover $$f$$ from its Radon transform, we need to apply the ramp filter $$\Lambda_1$$ followed by the dual Radon transform. In this case, the ramp filter involves a first derivative and a Hilbert transform:
+            </p>
+            <p>$$\Lambda_1\{\mathcal{R}f\}(\gamma, t) = H_t \partial_t \mathcal{R}f(\gamma, t)$$</p>
+            <p>
+                In the frequency domain, this becomes:
+            </p>
+            <p>$$\hat{\Lambda_1\{\mathcal{R}f\}}(\gamma, \omega) = i\omega |\omega| \hat{\mathcal{R}f}(\gamma, \omega) = |\omega|^2 \cdot \text{sgn}(\omega) \cdot \hat{\mathcal{R}f}(\gamma, \omega)$$</p>
+            <p>
+                The factor $$|\omega|$$ gives the filter its "ramp" shape, amplifying high frequencies.
+            </p>
+            <p>
+                In practical implementations, like CT scanning, a modified version of the ramp filter is often used to reduce noise amplification at high frequencies. For example, the Ram-Lak filter multiplies the ramp filter by a rectangular window function that cuts off frequencies above a certain threshold.
+            </p>
+            <p>
+                In the paper's neural network framework, the operator $$R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$$ applies the ramp filter to the Radon transform and then takes $$m$$ additional derivatives. For $$m=2$$ (corresponding to ReLU networks), this operator can be rewritten using the intertwining relations as:
+            </p>
+            <p>$$R_2 = c_d \Lambda_1 \mathcal{R} \Delta = c_d \mathcal{R} \circ \Delta$$</p>
+            <p>
+                This shows that for ReLU networks, the operator $$R_2$$ effectively applies the Laplacian in the spatial domain, mapping ridge functions to Dirac distributions in the Radon domain. This property is fundamental to the paper's representer theorem, showing that the regularized solution to the inverse problem is a single-hidden layer neural network.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="radon_inversion.html">Radon Inversion Formula</a></li>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

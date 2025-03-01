@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rademacher Complexity</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Rademacher Complexity</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Rademacher complexity is a measure of function class capacity that appears in the paper to establish generalization bounds for neural networks, showing how the total variation seminorm in the Radon domain directly controls a network's ability to generalize.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            A fundamental question in machine learning theory is: how well will a model trained on finite data perform on unseen examples? To answer this, we need ways to measure the "complexity" or "capacity" of a hypothesis class. While traditional measures like VC dimension provide worst-case bounds, Rademacher complexity offers more refined, data-dependent bounds that are often tighter in practice.
+        </p>
+        <p>
+            In the context of neural networks, understanding generalization is particularly challenging due to overparameterization—modern networks can perfectly fit random labels yet still generalize well on real data. The paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines" addresses this paradox by showing that regularized neural networks have controlled Rademacher complexity, which explains their good generalization properties despite having many parameters.
+        </p>
+        <p>
+            By establishing that the Rademacher complexity of neural networks is bounded by the total variation seminorm in the Radon domain, the paper provides a theoretical foundation for common regularization practices and explains why neural networks can generalize well when properly regularized.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            The Rademacher complexity of a function class $$\mathcal{F}$$ with respect to data points $$\{x_n\}_{n=1}^N$$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}(\mathcal{F}) := 2\mathbb{E}\left[\sup_{f \in \mathcal{F}} \frac{1}{N}\sum_{n=1}^N \sigma_n f(x_n)\right]$$</p>
+        </div>
+        <p>
+            where $$\{\sigma_n\}_{n=1}^N$$ are independent and identically distributed Rademacher random variables (random variables taking values +1 or -1 with equal probability). The expectation is taken over the random variables $$\{\sigma_n\}_{n=1}^N$$.
+        </p>
+        <p>
+            Intuitively, the Rademacher complexity measures how well functions in the class $$\mathcal{F}$$ can correlate with random noise. A function class with high complexity can fit random patterns well, suggesting potential overfitting, while a class with low complexity cannot fit random patterns, indicating better generalization properties.
+        </p>
+        <p>
+            In the paper, the authors consider the class of neural networks with bounded seminorm:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}_\Theta := \{f_\theta : \theta \in \Theta, \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1} \leq B, |b_k| \leq \frac{C}{2}, k = 1,...,K, K \geq 0\}$$</p>
+        </div>
+        <p>
+            They prove that the Rademacher complexity of this class is bounded by:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2BC^{m-1}}{\sqrt{N}(m-1)!} + \mathcal{R}(c)$$</p>
+        </div>
+        <p>
+            where $$C$$ is a bound on the norm of the input data, $$B$$ is the bound on the seminorm, and $$\mathcal{R}(c)$$ is the Rademacher complexity of the polynomial terms.
+        </p>
+        <p>
+            Key insights from this Rademacher complexity bound include:
+        </p>
+        <ul>
+            <li>The bound depends on the seminorm $$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$, not on the number of parameters</li>
+            <li>The complexity decreases with the sample size $$N$$ at a rate of $$O(1/\sqrt{N})$$</li>
+            <li>The complexity depends on the activation function through the factor $$(m-1)!$$, where $$m-1$$ is the algebraic growth rate</li>
+            <li>Regularization methods that constrain the seminorm (like path-norm or weight decay) directly control the Rademacher complexity</li>
+        </ul>
+        <p>
+            By standard results in statistical learning theory, the generalization error is bounded by the empirical error plus terms involving the Rademacher complexity. Therefore, controlling the Rademacher complexity through appropriate regularization ensures good generalization.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Let's illustrate how Rademacher complexity applies to neural networks through a concrete example.
+            </p>
+            <p>
+                Consider a binary classification problem with 1000 training examples. We train a ReLU network ($$m = 2$$) with the constraint that $$\sum_{k=1}^K |v_k|\|w_k\|_2 \leq 10$$. Assume the input features satisfy $$\|x_n\|_2 \leq 2$$ for all examples.
+            </p>
+            <p>
+                According to the paper's bound, the Rademacher complexity of this neural network class is:
+            </p>
+            <p>$$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2 \cdot 10 \cdot 2^1}{\sqrt{1000} \cdot 1!} + \mathcal{R}(c) = \frac{40}{\sqrt{1000}} + \mathcal{R}(c) \approx 1.27 + \mathcal{R}(c)$$</p>
+            <p>
+                Assuming the polynomial term is a simple linear function with bounded norm, $$\mathcal{R}(c)$$ is typically small, let's say 0.1. Then we have $$\mathcal{R}(\mathcal{F}_\Theta) \leq 1.37$$.
+            </p>
+            <p>
+                Using a standard generalization bound, with probability at least 0.95, the generalization error is bounded by:
+            </p>
+            <p>$$\text{Error}(f) \leq \hat{\text{Error}}_N(f) + L \cdot \mathcal{R}(\mathcal{F}_\Theta) + C_0\sqrt{\frac{\log(1/\delta)}{2N}}$$</p>
+            <p>
+                where $$L$$ is the Lipschitz constant of the loss function (typically 1 for normalized losses), $$C_0$$ is a bound on the loss (typically 1), and $$\delta = 0.05$$ for 95% confidence.
+            </p>
+            <p>
+                Plugging in our values:
+            </p>
+            <p>$$\text{Error}(f) \leq \hat{\text{Error}}_{1000}(f) + 1 \cdot 1.37 + 1\sqrt{\frac{\log(20)}{2000}} \approx \hat{\text{Error}}_{1000}(f) + 1.37 + 0.07 = \hat{\text{Error}}_{1000}(f) + 1.44$$</p>
+            <p>
+                This means that if we achieve a training error of 0.03 (3%), our generalization error is guaranteed to be at most 1.47 (147%) with 95% confidence. While this worst-case bound is not tight, in practice, the actual generalization error is typically much lower.
+            </p>
+            <p>
+                If we want a tighter bound, we could reduce the constraint to $$\sum_{k=1}^K |v_k|\|w_k\|_2 \leq 2$$, which would give $$\mathcal{R}(\mathcal{F}_\Theta) \leq 0.27 + 0.1 = 0.37$$ and correspondingly lower generalization error bound. This illustrates the trade-off between model expressivity and generalization capability, which can be precisely controlled through the seminorm constraint.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="binary_classification.html">Binary Classification</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

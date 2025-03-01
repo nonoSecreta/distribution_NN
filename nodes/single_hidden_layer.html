@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Hidden Layer Networks</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Single Hidden Layer Networks</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Single-hidden layer neural networks are a fundamental class of neural networks consisting of an input layer, one hidden layer of computation units, and an output layer, with their mathematical representation as superpositions of ridge functions forming the basis of the paper's theoretical analysis.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Single-hidden layer neural networks serve as the foundational building block for understanding more complex neural architectures. Despite their relative simplicity compared to deep networks, they possess remarkable approximation capabilities, as demonstrated by universal approximation theorems which show they can approximate any continuous function to arbitrary precision given sufficient width.
+        </p>
+        <p>
+            The paper by Parhi and Nowak focuses on single-hidden layer networks because they provide the clearest connection to the mathematical theory of ridge functions and splines. By establishing a variational framework for these networks, the authors derive insights about network complexity, generalization, and regularization that could be difficult to obtain for deeper architectures. This focus allows them to establish elegant theoretical results that help explain why neural networks work well in practice.
+        </p>
+        <h2>Mathematical Formulation</h2>
+        <p>
+            A single-hidden layer neural network maps inputs from $$\mathbb{R}^d$$ to $$\mathbb{R}$$ through a composition of linear transforms and nonlinear activation functions. Mathematically, it is expressed as:
+        </p>
+        <div class="definition">
+            <p>$$f(x) = \sum_{k=1}^K v_k \rho(w_k^T x - b_k) + c(x)$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$x \in \mathbb{R}^d$$ is the input vector</li>
+            <li>$$K$$ is the width (number of neurons) of the network</li>
+            <li>$$\rho: \mathbb{R} \rightarrow \mathbb{R}$$ is the activation function</li>
+            <li>$$w_k \in \mathbb{R}^d$$ are the input layer weights for the $$k$$-th neuron</li>
+            <li>$$b_k \in \mathbb{R}$$ is the bias term for the $$k$$-th neuron</li>
+            <li>$$v_k \in \mathbb{R}$$ is the output layer weight for the $$k$$-th neuron</li>
+            <li>$$c(x)$$ is an optional term, typically a polynomial of low degree</li>
+        </ul>
+        <p>
+            Each term $$\rho(w_k^T x - b_k)$$ represents a ridge function, making the entire network a superposition of ridge functions. In the context of the paper, the authors focus on networks with truncated power activation functions:
+        </p>
+        <div class="definition">
+            <p>$$\rho_m(t) = \frac{\max\{0,t\}^{m-1}}{(m-1)!}$$</p>
+        </div>
+        <p>
+            When $$m=2$$, this corresponds to the popular ReLU (Rectified Linear Unit) activation function, which equals $$\max\{0,t\}$$.
+        </p>
+        <p>
+            Key properties of single-hidden layer networks include:
+        </p>
+        <ul>
+            <li>They can be viewed as basis function expansions where each neuron contributes a basis function to the overall approximation</li>
+            <li>The hidden layer performs feature extraction, mapping inputs to a potentially higher-dimensional feature space</li>
+            <li>The output layer performs a linear combination of these features</li>
+            <li>They have direct connections to classical approximation methods like polynomial interpolation and splines</li>
+            <li>They exhibit a "representer theorem" showing that optimal networks for fitting data with appropriate regularization have width at most equal to the number of data points</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple binary classification problem in $$\mathbb{R}^2$$ for separating two interleaved spiral patterns. While a linear classifier would fail at this task, a single-hidden layer ReLU network with sufficient neurons can approximate the decision boundary.
+            </p>
+            <p>
+                For instance, a network with 20 neurons might be expressed as:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^{20} v_k \max\{0, w_k^T x - b_k\} + u^T x + s$$
+            </p>
+            <p>
+                where $$x = (x_1, x_2)$$ represents the 2D coordinates, and the parameters $$\{v_k, w_k, b_k\}_{k=1}^{20}$$ along with $$u$$ and $$s$$ are trained to minimize a classification loss.
+            </p>
+            <p>
+                According to the paper's representer theorem, if we use appropriate regularization (related to total variation in the Radon domain), the optimal solution will have at most $$N$$ neurons, where $$N$$ is the number of training examples. This provides a theoretical justification for why overparameterized networks can still generalize well - the effective complexity is controlled by the regularization, not by the initial width.
+            </p>
+            <p>
+                Each neuron in this network defines a "hinge" at a hyperplane $$w_k^T x = b_k$$. The network combines these hinges to create a piecewise linear decision boundary that can approximate the spiral separation surface. The weights $$v_k$$ determine how each hinge contributes to the final decision, with positive weights "pushing up" and negative weights "pushing down" the function value in different regions.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="activation_functions.html">Activation Functions</a></li>
+            <li><a href="network_weights.html">Network Weights & Bias</a></li>
+        </ul>
+        <h3>Theoretical Connections</h3>
+        <ul>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

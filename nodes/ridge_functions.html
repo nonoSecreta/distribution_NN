@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridge Functions</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Ridge Functions</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Ridge functions are multivariate functions that remain constant along hyperplanes, forming the fundamental building blocks of single-hidden layer neural networks and serving as a key link between neural networks and the Radon transform.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Understanding ridge functions is essential for developing a theoretical foundation for neural networks, as they form the basic computational units (neurons) in single-hidden layer networks. By analyzing the properties of these building blocks, we can derive insights about the overall network behavior, its approximation capabilities, and its functional properties.
+        </p>
+        <p>
+            Ridge functions also provide a natural connection to the Radon transform, which integrates functions over hyperplanes. This connection is central to the paper's variational framework, allowing the authors to establish that neural networks are solutions to certain continuous-domain inverse problems with total variation regularization in the Radon domain.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A ridge function is any multivariate function mapping $\mathbb{R}^d \to \mathbb{R}$ of the form:
+        </p>
+        <div class="definition">
+            <p>$$x \mapsto \rho(w^T x)$$</p>
+        </div>
+        <p>
+            where $\rho: \mathbb{R} \to \mathbb{R}$ is a univariate function and $w \in \mathbb{R}^d \setminus \{0\}$. More generally, including a bias term, we have:
+        </p>
+        <div class="definition">
+            <p>$$x \mapsto \rho(w^T x - b)$$</p>
+        </div>
+        <p>
+            Key properties of ridge functions include:
+        </p>
+        <ul>
+            <li>They are constant along hyperplanes perpendicular to $w$ (that is, along hyperplanes $w^T x = \text{constant}$)</li>
+            <li>Single-hidden layer neural networks are superpositions of ridge functions: $f(x) = \sum_{k=1}^K v_k \rho(w_k^T x - b_k)$</li>
+            <li>Ridge functions have a special relationship with the Radon transform: if $f(x) = \rho(w^T x - b)$, then $\mathcal{R}\{f\}(\gamma, t)$ is concentrated on the lines where $\gamma = \pm\frac{w}{\|w\|_2}$ and $t = \pm\frac{b}{\|w\|_2}$</li>
+            <li>For truncated power functions $\rho_m = \frac{\max\{0,\cdot\}^{m-1}}{(m-1)!}$, ridge functions are "sparsified" by the operator $R_m = c_d \partial_t^m \Lambda_{d-1}\mathcal{R}$, resulting in Dirac impulses in the Radon domain</li>
+        </ul>
+        <p>
+            While the term "ridge function" is modern, such functions have been studied for many years under the name "plane waves" in the context of solutions to partial differential equations. The connection between ridge functions, neural networks, and the Radon transform has also been exploited in the development of ridgelets, a wavelet-like system inspired by neural networks.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple ridge function in two dimensions with the ReLU activation:
+            </p>
+            <p>
+                $$f(x_1, x_2) = \max\{0, 3x_1 + 4x_2 - 5\}$$
+            </p>
+            <p>
+                This function has:
+                <ul>
+                    <li>Weight vector $w = (3, 4)$ with $\|w\|_2 = 5$</li>
+                    <li>Bias $b = 5$</li>
+                    <li>Activation function $\rho(t) = \max\{0, t\}$</li>
+                </ul>
+            </p>
+            <p>
+                The function is zero in the half-plane where $3x_1 + 4x_2 < 5$, and grows linearly in the perpendicular direction where $3x_1 + 4x_2 > 5$. The "ridge" or "hinge" occurs along the line $3x_1 + 4x_2 = 5$.
+            </p>
+            <p>
+                When we apply the operator $R_2$ to this function, it results in a Dirac impulse in the Radon domain at $(\gamma, t) = \left(\frac{w}{\|w\|_2}, \frac{b}{\|w\|_2}\right) = \left(\left(\frac{3}{5}, \frac{4}{5}\right), 1\right)$, corresponding to the normalized direction and offset of the "ridge" hyperplane.
+            </p>
+            <p>
+                This example illustrates why the paper's variational framework with total variation regularization in the Radon domain naturally leads to solutions that are sums of a small number of ridge functions, as each ridge function contributes a Dirac impulse to the total variation norm.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="activation_functions.html">Activation Functions</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+        </ul>
+        <h3>Historical Context</h3>
+        <ul>
+            <li><a href="plane_waves.html">Plane Waves</a></li>
+            <li><a href="ridgelets.html">Ridgelets</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morozov Regularization</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Morozov Regularization</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Morozov regularization, also known as the discrepancy principle, is an approach to regularization where the complexity of the solution is minimized subject to a constraint on how well it fits the data. In the paper, it relates to one of the formulations of the neural network training problem with total variation regularization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Morozov regularization provides an alternative perspective on the regularization problem compared to Tikhonov regularization and Ivanov regularization. Its key advantages include:
+        </p>
+        <ul>
+            <li>Directly controlling the level of data fidelity</li>
+            <li>Avoiding the need to explicitly choose a regularization parameter that balances regularization and data fit</li>
+            <li>Providing a principled approach when knowledge about the noise level in the data is available</li>
+            <li>Offering a different but equivalent formulation of regularized optimization problems</li>
+        </ul>
+        <p>
+            In the context of the paper, understanding Morozov regularization helps complete the picture of different approaches to regularization and their relationships to the authors' variational framework for neural networks.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            Morozov regularization formulates an inverse problem as:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} \|Lf\| \quad \text{subject to} \quad \|Vf - y\| \leq \epsilon$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$f$ is the function to be estimated</li>
+                <li>$V$ is a measurement operator</li>
+                <li>$y$ is the observed data</li>
+                <li>$L$ is a regularization operator</li>
+                <li>$\epsilon > 0$ is a parameter representing the acceptable level of data fit (often related to the noise level)</li>
+                <li>$\|\cdot\|$ represents appropriate norms for the respective spaces</li>
+            </ul>
+        </p>
+        <p>
+            In this formulation:
+            <ul>
+                <li>The objective is to minimize the complexity or smoothness measure $\|Lf\|$</li>
+                <li>The constraint ensures that the solution explains the data up to a certain tolerance $\epsilon$</li>
+                <li>When the data contains noise with known magnitude, $\epsilon$ can be set based on the noise level</li>
+            </ul>
+        </p>
+        <p>
+            In the context of the paper, Morozov regularization would correspond to a formulation like:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} \quad \text{subject to} \quad G(Vf) \leq \epsilon$$</p>
+        </div>
+        <p>
+            This is equivalent to the paper's formulation:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} G(Vf) + \lambda \|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            for some value of $\lambda$ that depends on $\epsilon$ and the data. This equivalence is part of a broader relationship between Tikhonov, Ivanov, and Morozov regularization approaches.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a neural network training problem in the binary classification setting. The Morozov formulation would be:
+            </p>
+            <p>$$\min_{f \in \mathcal{F}_m} \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} \quad \text{subject to} \quad \sum_{n=1}^N \ell(y_n f(x_n)) \leq \epsilon$$</p>
+            <p>
+                where $\ell$ is a loss function like the hinge loss $\ell(t) = \max(0, 1-t)$ and $y_n \in \{-1, +1\}$ are binary labels.
+            </p>
+            <p>
+                This can be recast as a neural network training problem:
+            </p>
+            <p>$$\min_{\theta \in \Theta} \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1} \quad \text{subject to} \quad \sum_{n=1}^N \ell(y_n f_\theta(x_n)) \leq \epsilon$$</p>
+            <p>
+                where:
+            </p>
+            <p>$$f_\theta(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$</p>
+            <p>
+                The paper shows that this approach is equivalent to the Ivanov formulation:
+            </p>
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(y_n f_\theta(x_n)) \quad \text{subject to} \quad \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1} \leq B$$</p>
+            <p>
+                and to the Tikhonov formulation:
+            </p>
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(y_n f_\theta(x_n)) + \lambda \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+            <p>
+                for appropriate values of $\epsilon$, $B$, and $\lambda$. Each formulation offers a different perspective on the regularization problem, with the choice between them often depending on practical considerations like knowledge of noise levels or desired model complexity.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="ivanov_estimators.html">Ivanov Estimators</a></li>
+            <li><a href="tikhonov_regularization.html">Tikhonov Regularization</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridgelets</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Ridgelets</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Ridgelets are a wavelet-like system inspired by neural networks that provide a sparse representation for functions with singularities along hyperplanes, establishing a formal bridge between harmonic analysis and neural network theory.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Traditional wavelets are excellent at representing functions with point singularities, but they struggle with higher-dimensional singularities along lines, planes, or general hyperplanes. Ridgelets were developed in the late 1990s specifically to address this limitation by extending wavelet theory to efficiently represent singularities along hyperplanes.
+        </p>
+        <p>
+            The development of ridgelets was motivated by the observation that neural networks with sigmoidal or ridge-like activation functions perform well at approximating functions with hyperplane singularities. Ridgelets provide a formal mathematical framework that connects neural networks to harmonic analysis, enabling the application of powerful analytical tools from harmonic analysis to understand neural networks.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A ridgelet is a function that has the form:
+        </p>
+        <div class="definition">
+            <p>$$\psi_{a,b,\gamma}(x) = a^{-1/2} \psi\left(\frac{\gamma^T x - b}{a}\right)$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\psi: \mathbb{R} \to \mathbb{R}$$ is a wavelet function</li>
+            <li>$$\gamma \in \mathbb{S}^{d-1}$$ is a unit vector defining the orientation</li>
+            <li>$$b \in \mathbb{R}$$ is a translation parameter</li>
+            <li>$$a > 0$$ is a scale parameter</li>
+        </ul>
+        <p>
+            The key properties of ridgelets include:
+        </p>
+        <ul>
+            <li><strong>Orientation Specificity:</strong> Each ridgelet is constant along hyperplanes perpendicular to $$\gamma$$, making it effective at capturing singularities along these hyperplanes</li>
+            <li><strong>Scale Adaptivity:</strong> The scale parameter $$a$$ allows ridgelets to capture features at different resolutions</li>
+            <li><strong>Wavelet-Like Structure:</strong> Ridgelets inherit many properties from wavelets, such as localization and multi-resolution analysis</li>
+            <li><strong>Radon Connection:</strong> The ridgelet transform is closely related to the Radon transform, as it can be expressed as a wavelet transform applied to the Radon transform</li>
+        </ul>
+        <p>
+            The ridgelet transform of a function $$f: \mathbb{R}^d \to \mathbb{R}$$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}_f(a, b, \gamma) = \int_{\mathbb{R}^d} f(x) \psi_{a,b,\gamma}(x) \, dx$$</p>
+        </div>
+        <p>
+            This can be rewritten using the Radon transform as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}_f(a, b, \gamma) = \int_{\mathbb{R}} (\mathcal{R}f)(\gamma, t) a^{-1/2} \psi\left(\frac{t - b}{a}\right) \, dt$$</p>
+        </div>
+        <p>
+            This relationship shows that the ridgelet transform is effectively applying a wavelet transform to the slices of the Radon transform. This connection to the Radon transform is similar to the one explored in the paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines," where neural networks are characterized using total variation regularization in the Radon domain.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple discontinuity along a line in a 2D image, such as a straight edge in a photograph. While representing this edge would require many wavelets at different scales, it can be captured efficiently with just a few ridgelets.
+            </p>
+            <p>
+                For example, if we have an image with an intensity jump along the line $$3x_1 + 4x_2 = 5$$:
+            </p>
+            <p>$$f(x_1, x_2) = \begin{cases} 
+                1 & \text{if } 3x_1 + 4x_2 > 5 \\
+                0 & \text{if } 3x_1 + 4x_2 \leq 5
+                \end{cases}$$</p>
+            <p>
+                This can be approximated very efficiently using a ridgelet with orientation $$\gamma = (3/5, 4/5)$$, location parameter $$b = 5$$, and an appropriate wavelet function $$\psi$$ (such as a Mexican hat wavelet).
+            </p>
+            <p>
+                In contrast, representing this function using a neural network with ReLU activation would require just a single neuron:
+            </p>
+            <p>$$f_{NN}(x_1, x_2) = \sigma(3x_1 + 4x_2 - 5)$$</p>
+            <p>
+                where $$\sigma$$ is a shifted and scaled version of the Heaviside step function. This illustrates the close relationship between ridgelets and neural networks with ridge activation functions.
+            </p>
+            <p>
+                The connection to the paper's framework is that both approaches leverage the Radon transform to analyze functions along hyperplanes. The paper's seminorm $$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$ measures the complexity of a function in terms of its representation in the Radon domain, which is closely related to its ridgelet representation.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="plane_waves.html">Plane Waves</a></li>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="function_approximation.html">Function Approximation</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

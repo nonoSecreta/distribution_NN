@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempered Distributions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Tempered Distributions</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Tempered distributions form a generalized function space that extends classical functions to include singularities and other non-classical behaviors, providing the essential mathematical foundation for defining operators like the Radon transform in the paper's variational framework.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Classical functions are often insufficient for analyzing operators such as the Radon transform, particularly when dealing with neural networks that involve non-smooth activation functions like ReLU. Tempered distributions provide a more flexible framework that can accommodate singular behaviors and enable rigorous mathematical analysis of these challenging scenarios.
+        </p>
+        <p>
+            In the paper, tempered distributions are essential for defining the native spaces of the operators used in the variational framework, allowing for the proper formulation of the inverse problems whose solutions are single-hidden layer neural networks. Without this generalized function theory, many of the mathematical results could not be established with proper rigor.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            Tempered distributions are defined as continuous linear functionals on the Schwartz space $$\mathcal{S}(\mathbb{R}^d)$$. Formally, the space of tempered distributions, denoted as $$\mathcal{S}'(\mathbb{R}^d)$$, is the continuous dual of the Schwartz space:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{S}'(\mathbb{R}^d) = \{T : \mathcal{S}(\mathbb{R}^d) \to \mathbb{C} \; | \; T \text{ is linear and continuous}\}$$</p>
+        </div>
+        <p>
+            Key properties of tempered distributions include:
+        </p>
+        <ul>
+            <li>They include functions of polynomial growth, which may not be integrable</li>
+            <li>They encompass classical functions, measures, and more singular objects</li>
+            <li>They are closed under differentiation, convolution with smooth functions, and the Fourier transform</li>
+            <li>The Fourier transform extends naturally to tempered distributions, providing powerful analytical tools</li>
+            <li>Every tempered distribution is locally a derivative of some continuous function</li>
+            <li>Polynomials and Dirac deltas (and their derivatives) are tempered distributions</li>
+        </ul>
+        <p>
+            In the context of the paper, tempered distributions on the Radon domain, denoted as $$\mathcal{S}'(S^{d-1} \times \mathbb{R})$$, are particularly important. These are defined as the continuous dual of the Schwartz space on the Radon domain, $$\mathcal{S}(S^{d-1} \times \mathbb{R})$$.
+        </p>
+        <p>
+            The Radon transform and its dual can be extended to act on appropriate spaces of tempered distributions through duality:
+        </p>
+        <div class="definition">
+            <p>$$\langle \mathcal{R}f, \psi \rangle := \langle f, \mathcal{R}^* \psi \rangle$$</p>
+            <p>$$\langle \mathcal{R}^*\Phi, \varphi \rangle := \langle \Phi, \mathcal{R} \varphi \rangle$$</p>
+        </div>
+        <p>
+            However, this extension requires care, as the dual Radon transform of a Schwartz function on the Radon domain may not be a Schwartz function on $$\mathbb{R}^d$$. This is where the more specialized Lizorkin test functions become necessary.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                A classic example of a tempered distribution that is not a regular function is the Dirac delta $$\delta_{\mathbb{R}^d}$$. This distribution acts on test functions by evaluation at the origin:
+            </p>
+            <p>
+                $$\langle \delta_{\mathbb{R}^d}, \varphi \rangle = \varphi(0)$$
+            </p>
+            <p>
+                The Dirac delta plays a crucial role in the paper's analysis of neural networks. For instance, when applying the operator $$R_m$$ to a ridge function (neuron) $$r^{(m)}_{(w,b)}(x) = \rho_m(w^Tx - b)$$, we get:
+            </p>
+            <p>
+                $$R_m\{r^{(m)}_{(w,b)}\} = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - z) + (-1)^m\delta_{S^{d-1}\times\mathbb{R}}(\cdot + z)}{2}$$
+            </p>
+            <p>
+                where $$z = (w,b) \in S^{d-1} \times \mathbb{R}$$ and $$\delta_{S^{d-1}\times\mathbb{R}}$$ is the Dirac delta on the Radon domain.
+            </p>
+            <p>
+                This "sparsification" effect, where neural network neurons correspond to Dirac impulses in the Radon domain under the action of $$R_m$$, is a key insight of the paper and forms the foundation for the representer theorem. The formulation and rigorous analysis of this relationship fundamentally rely on the theory of tempered distributions.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+            <li><a href="lizorkin_test_functions.html">Lizorkin Test Functions</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+            <li><a href="schwartz_space.html">Schwartz Space</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radon Inversion Formula</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Radon Inversion Formula</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The Radon inversion formula provides a way to reconstruct a function from its integrals over hyperplanes, serving as the theoretical foundation for tomographic imaging and playing a key role in the connection between neural networks and the Radon domain.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The Radon transform maps a function to its integrals over hyperplanes. For many applications, including tomographic imaging and neural network analysis, we need to recover the original function from these integrals—this is where the Radon inversion formula becomes essential.
+        </p>
+        <p>
+            In medical imaging, particularly computed tomography (CT), the Radon inversion formula enables reconstruction of tissue densities from X-ray projections. In the context of neural networks, the inversion formula establishes a bidirectional connection between functions in the original domain and the Radon domain, which is crucial for the variational framework developed in "Banach Space Representer Theorems for Neural Networks and Ridge Splines."
+        </p>
+        <h2>Mathematical Formulation</h2>
+        <p>
+            Let $$f: \mathbb{R}^d \to \mathbb{R}$$ be a sufficiently regular function and $$\mathcal{R}f$$ be its Radon transform. The Radon inversion formula states:
+        </p>
+        <div class="definition">
+            <p>$$f = \frac{1}{2(2\pi)^{d-1}} \mathcal{R}^* \Lambda_{d-1} \mathcal{R} f$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\mathcal{R}^*$$ is the dual Radon transform (also called the backprojection operator)</li>
+            <li>$$\Lambda_{d-1}$$ is the ramp filter in the Radon domain</li>
+        </ul>
+        <p>
+            The dual Radon transform maps a function $$\Phi: S^{d-1} \times \mathbb{R} \to \mathbb{R}$$ to a function on $$\mathbb{R}^d$$ via:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}^*\{\Phi\}(x) = \int_{S^{d-1}} \Phi(\gamma, \gamma^T x) \, d\sigma(\gamma)$$</p>
+        </div>
+        <p>
+            where $$\sigma$$ is the surface measure on the unit sphere $$S^{d-1}$$.
+        </p>
+        <p>
+            The ramp filter $$\Lambda_{d-1}$$ is defined differently depending on the parity of $$d$$:
+        </p>
+        <div class="definition">
+            <p>$$\Lambda_d\{\Phi\}(\gamma, t) = 
+            \begin{cases} 
+            \partial_t^d \Phi(\gamma, t), & \text{if } d \text{ is even} \\
+            H_t \partial_t^d \Phi(\gamma, t), & \text{if } d \text{ is odd}
+            \end{cases}$$</p>
+        </div>
+        <p>
+            where $$H_t$$ is the Hilbert transform with respect to the variable $$t$$.
+        </p>
+        <p>
+            The inversion formula can also be written using the Fourier transform. If $$\hat{f}$$ and $$\hat{\mathcal{R}f}$$ denote the Fourier transforms of $$f$$ and $$\mathcal{R}f$$ respectively, then:
+        </p>
+        <div class="definition">
+            <p>$$\hat{\mathcal{R}f}(\gamma, \omega) = \hat{f}(\omega\gamma)$$</p>
+        </div>
+        <p>
+            This relationship, known as the Fourier Slice Theorem, provides an alternative approach to Radon inversion through Fourier methods.
+        </p>
+        <p>
+            The inversion formula is closely related to the intertwining relations of the Radon transform with the Laplacian operator:
+        </p>
+        <div class="definition">
+            <p>$$(-\Delta)^{\frac{d-1}{2}} \mathcal{R}^* = \mathcal{R}^* \Lambda_{d-1} \quad \text{and} \quad \mathcal{R}(-\Delta)^{\frac{d-1}{2}} = \Lambda_{d-1} \mathcal{R}$$</p>
+        </div>
+        <p>
+            These relationships are used extensively in the paper to establish the connection between neural networks and functions of bounded variation in the Radon domain.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple example in two dimensions ($$d=2$$) with a function representing a uniform disk of radius 1 centered at the origin:
+            </p>
+            <p>$$f(x_1, x_2) = 
+            \begin{cases} 
+            1 & \text{if } x_1^2 + x_2^2 \leq 1 \\
+            0 & \text{otherwise}
+            \end{cases}$$</p>
+            <p>
+                The Radon transform of this function gives the length of the intersection of a line with the disk. For a line with normal vector $$\gamma = (\cos\theta, \sin\theta)$$ and distance $$t$$ from the origin, the Radon transform is:
+            </p>
+            <p>$$\mathcal{R}f(\gamma, t) = 
+            \begin{cases} 
+            2\sqrt{1 - t^2} & \text{if } |t| \leq 1 \\
+            0 & \text{otherwise}
+            \end{cases}$$</p>
+            <p>
+                To recover $$f$$ from $$\mathcal{R}f$$, we apply the Radon inversion formula. In two dimensions, the ramp filter $$\Lambda_1$$ involves a first derivative and a Hilbert transform:
+            </p>
+            <p>$$\Lambda_1 \mathcal{R}f(\gamma, t) = H_t \partial_t \mathcal{R}f(\gamma, t)$$</p>
+            <p>
+                Computing this and then applying the dual Radon transform $$\mathcal{R}^*$$ recovers the original function $$f$$.
+            </p>
+            <p>
+                In the context of neural networks, the paper uses the Radon inversion formula to establish that:
+            </p>
+            <p>$$R_m\{r_m^{(w,b)}\} = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - z) + (-1)^m\delta_{S^{d-1}\times\mathbb{R}}(\cdot + z)}{2}$$</p>
+            <p>
+                where $$r_m^{(w,b)}(x) = \rho_m(w^Tx - b)$$ is a neuron with truncated power activation function and $$z = (w, b)$$. This relationship shows that neurons are "sparsified" by the operator $$R_m$$ in the Radon domain, a key insight that leads to the paper's representer theorem.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+            <li><a href="ramp_filter.html">Ramp Filter</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

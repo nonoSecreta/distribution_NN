@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Variation Regularization</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Total Variation Regularization</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Total variation regularization in the Radon domain is the cornerstone of the paper's variational framework, promoting sparse solutions that correspond to single-hidden layer neural networks with a finite number of neurons.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Regularization plays a crucial role in solving ill-posed inverse problems and training generalizable machine learning models. Total variation regularization, in particular, is valuable because it promotes solutions with sparse derivatives or sparse representations in an appropriate domain. This sparsity-promoting property makes it ideal for problems where the goal is to recover piecewise-smooth functions from limited data.
+        </p>
+        <p>
+            The paper's innovation is applying total variation regularization in the Radon domain to connect neural networks with variational methods. This approach leverages the fact that neural networks can be viewed as sums of ridge functions, which have sparse representations when transformed to the Radon domain. By minimizing the total variation in this domain, we naturally obtain solutions that are single-hidden layer neural networks with few neurons.
+        </p>
+        <h2>Mathematical Formulation</h2>
+        <p>
+            In the paper, the authors define a family of seminorms:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{(m)} := c_d\|\partial_t^m\Lambda_{d-1}\mathcal{R}f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$\mathcal{R}$ is the Radon transform</li>
+            <li>$\Lambda_{d-1}$ is a ramp filter in the Radon domain</li>
+            <li>$\partial_t^m$ is the $m$-th partial derivative with respect to $t$</li>
+            <li>$c_d$ is a dimension-dependent constant</li>
+            <li>$\|\cdot\|_{M(S^{d-1}\times\mathbb{R})}$ is the total variation norm (in the sense of measures)</li>
+        </ul>
+        <p>
+            The total variation norm $\|\mu\|_{M(X)}$ of a measure $\mu$ on domain $X$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\|\mu\|_{M(X)} := \sup_{\phi\in C_0(X), \|\phi\|_\infty=1} \langle \mu, \phi \rangle$$</p>
+        </div>
+        <p>
+            where $C_0(X)$ is the space of continuous functions vanishing at infinity. The total variation norm can be understood as the $L^1$ norm generalized to the space of measures.
+        </p>
+        <p>
+            Key properties of this regularization approach include:
+        </p>
+        <ul>
+            <li>It promotes sparsity in the Radon domain, leading to solutions with few "active" components</li>
+            <li>For a ReLU activation function ($m=2$), the regularization is equivalent to $\sum_{k=1}^K |v_k|\|w_k\|_2$, which corresponds to the $\ell_1$-path norm</li>
+            <li>The regularization is tightly connected to the algebraic growth rate of the activation function, with $m-1$ being the growth rate</li>
+            <li>It provides a principled way to control the complexity of neural networks, leading to better generalization</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a 2D function represented by a ReLU network ($m=2$):
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$
+            </p>
+            <p>
+                The total variation seminorm of this function in the Radon domain is:
+            </p>
+            <p>
+                $$\|f\|_{(2)} = \|R_2 f\|_{M(S^{1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2$$
+            </p>
+            <p>
+                This value quantifies the "complexity" of the function in terms of the magnitude of its weights.
+            </p>
+            <p>
+                When we minimize this seminorm while fitting data:
+            </p>
+            <p>
+                $$\min_{f \in \mathcal{F}_2} \sum_{n=1}^N (f(x_n) - y_n)^2 + \lambda\|f\|_{(2)}$$
+            </p>
+            <p>
+                The solution is a neural network with at most $N$ neurons (plus a linear term), regardless of how many neurons we started with. The regularization effectively "prunes" unnecessary neurons, keeping only those needed to fit the data well.
+            </p>
+            <p>
+                Figure 3 in the paper illustrates this visually: applying $R_2$ to a ReLU network with 7 neurons results in exactly 7 Dirac impulses in the Radon domain. The total variation norm simply sums the magnitudes of these impulses, providing a measure of complexity that aligns with our intuition about network simplicity.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="variational_framework.html">Variational Framework</a></li>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="m_norm.html">M-Norm</a></li>
+            <li><a href="sparsity_regularizers.html">Sparsity Promoting Regularizers</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

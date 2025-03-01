@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fourier Transform</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Fourier Transform</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The Fourier transform is a fundamental tool in mathematical analysis that decomposes functions into their frequency components. In the paper, it plays a crucial role in analyzing the Radon transform, defining the ramp filter, and understanding the action of differential operators in the Radon domain.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The Fourier transform is essential to the paper's theoretical framework for several reasons:
+        </p>
+        <ul>
+            <li>It provides a way to analyze the Radon transform through the Fourier slice theorem</li>
+            <li>It enables the definition of the ramp filter $\Lambda_{d-1}$ in terms of its frequency response</li>
+            <li>It facilitates the analysis of differential operators like $\partial_t^m$ in the Radon domain</li>
+            <li>It helps establish the intertwining relations between the Radon transform and the Laplacian</li>
+        </ul>
+        <p>
+            By working in the frequency domain, the authors gain powerful insights into the structure of the operator $R_m$ and its action on ridge functions, which is crucial for developing their representer theorem.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The Fourier transform $\mathcal{F}$ of a function $f: \mathbb{R}^d \to \mathbb{C}$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}\{f\}(\xi) := \int_{\mathbb{R}^d} f(x) e^{-i x^T \xi} \, dx, \quad \xi \in \mathbb{R}^d$$</p>
+        </div>
+        <p>
+            The inverse Fourier transform $\mathcal{F}^{-1}$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}^{-1}\{F\}(x) := \frac{1}{(2\pi)^d} \int_{\mathbb{R}^d} e^{i x^T \xi} F(\xi) \, d\xi, \quad x \in \mathbb{R}^d$$</p>
+        </div>
+        <p>
+            Key properties of the Fourier transform include:
+        </p>
+        <ul>
+            <li>Linearity: $\mathcal{F}\{af + bg\} = a\mathcal{F}\{f\} + b\mathcal{F}\{g\}$ for constants $a, b$</li>
+            <li>Translation: $\mathcal{F}\{f(\cdot - x_0)\}(\xi) = e^{-i x_0^T \xi} \mathcal{F}\{f\}(\xi)$</li>
+            <li>Modulation: $\mathcal{F}\{e^{i x^T \xi_0} f(x)\}(\xi) = \mathcal{F}\{f\}(\xi - \xi_0)$</li>
+            <li>Scaling: $\mathcal{F}\{f(ax)\}(\xi) = |a|^{-d} \mathcal{F}\{f\}(\xi/a)$ for $a \neq 0$</li>
+            <li>Derivatives: $\mathcal{F}\{\partial^\alpha f\}(\xi) = (i\xi)^\alpha \mathcal{F}\{f\}(\xi)$</li>
+            <li>Convolution: $\mathcal{F}\{f * g\} = \mathcal{F}\{f\} \cdot \mathcal{F}\{g\}$</li>
+            <li>Parseval's identity: $\int_{\mathbb{R}^d} |f(x)|^2 \, dx = \frac{1}{(2\pi)^d} \int_{\mathbb{R}^d} |\mathcal{F}\{f\}(\xi)|^2 \, d\xi$</li>
+        </ul>
+        <p>
+            The Fourier transform can be applied to functions in the Schwartz space $S(\mathbb{R}^d)$, resulting in functions also in $S(\mathbb{R}^d)$. It can be extended to tempered distributions via duality.
+        </p>
+        <p>
+            In the context of the paper, the Fourier transform is used in several ways:
+        </p>
+        <p>
+            1. <strong>Fourier Slice Theorem:</strong> This relates the Radon transform to the Fourier transform:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}_t\{\mathcal{R}\{f\}(\gamma, \cdot)\}(\omega) = \mathcal{F}\{f\}(\omega\gamma)$$</p>
+        </div>
+        <p>
+            where $\mathcal{F}_t$ is the one-dimensional Fourier transform with respect to $t$. This theorem says that the 1D Fourier transform of the Radon transform of $f$ along a line with direction $\gamma$ equals the value of the $d$-dimensional Fourier transform of $f$ at the point $\omega\gamma$.
+        </p>
+        <p>
+            2. <strong>Ramp Filter Definition:</strong> The ramp filter $\Lambda_d$ is defined in terms of its frequency response:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}_t\{\Lambda_d\{\Phi\}(\gamma, \cdot)\}(\omega) = i^d |\omega|^d \mathcal{F}_t\{\Phi(\gamma, \cdot)\}(\omega)$$</p>
+        </div>
+        <p>
+            3. <strong>Null Space Characterization:</strong> The paper uses the Fourier slice theorem to characterize the null space of the operator $R_m$:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}\{R_m\{f\}\}(\gamma, \omega) = c_d (i\omega)^m i^d |\omega|^d \mathcal{F}\{f\}(\omega\gamma)$$</p>
+        </div>
+        <p>
+            This shows that $f$ is in the null space of $R_m$ if and only if its Fourier transform is supported only at the origin, which characterizes polynomials of degree less than $m$.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Let's consider how the Fourier transform helps analyze the action of the operator $R_2$ (corresponding to ReLU networks) on a ridge function.
+            </p>
+            <p>
+                For a ReLU neuron $r(x) = \max\{0, w^T x - b\}$, we can compute:
+            </p>
+            <p>$$\mathcal{F}\{r\}(\xi) = \frac{1}{(i\|w\|_2)^2 (i w^T \xi / \|w\|_2)^2} e^{-i b \xi^T w / \|w\|_2^2} + \text{terms involving the Dirac impulse}$$</p>
+            <p>
+                Using the Fourier slice theorem and the definition of $R_2 = c_d \partial_t^2 \Lambda_{d-1} \mathcal{R}$, we can show:
+            </p>
+            <p>$$\mathcal{F}\{R_2\{r\}\}(\gamma, \omega) = c_d (i\omega)^2 i^{d-1} |\omega|^{d-1} \mathcal{F}\{r\}(\omega\gamma)$$</p>
+            <p>
+                This equals a constant multiple of $\delta(\gamma - w/\|w\|_2) \delta(\omega) + \delta(\gamma + w/\|w\|_2) \delta(\omega)$ plus terms involving $e^{-i b \omega}$, which corresponds to the Fourier transform of a Dirac impulse at $(w/\|w\|_2, b)$ in the Radon domain.
+            </p>
+            <p>
+                This analysis through the Fourier transform provides a way to understand why $R_2\{r\}$ yields a Dirac impulse in the Radon domain, which is the key to the paper's representer theorem for neural networks.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="schwartz_space.html">Schwartz Space</a></li>
+            <li><a href="tempered_distributions.html">Tempered Distributions</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="ramp_filter.html">Ramp Filter</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="radon_inversion.html">Radon Inversion Formula</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

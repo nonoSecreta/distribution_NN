@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tikhonov Regularization</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Tikhonov Regularization</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Tikhonov regularization is a widely used approach for solving ill-posed inverse problems by adding a regularization term that penalizes complex solutions. In the context of the paper, it's related to the regularized neural network training problems, though the paper focuses on total variation regularization in the Radon domain.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Regularization is essential in solving inverse problems where small changes in input data can lead to large changes in the solution. Tikhonov regularization provides a way to stabilize these problems by:
+        </p>
+        <ul>
+            <li>Ensuring the existence and uniqueness of solutions</li>
+            <li>Controlling the complexity of solutions to prevent overfitting</li>
+            <li>Improving the generalization properties of learned models</li>
+            <li>Making the optimization problem well-posed</li>
+        </ul>
+        <p>
+            In the context of the paper, understanding Tikhonov regularization helps situate the authors' approach within the broader landscape of regularization methods. While the paper focuses on total variation regularization in the Radon domain, connections to Tikhonov regularization appear in the equivalence between certain neural network training formulations and their proposed variational framework.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            Tikhonov regularization, named after Andrey Tikhonov, formulates an inverse problem as:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} \|Vf - y\|^2 + \lambda \|Lf\|^2$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$f$ is the function to be estimated</li>
+                <li>$V$ is a measurement operator (e.g., sampling at specific points)</li>
+                <li>$y$ is the observed data</li>
+                <li>$L$ is a regularization operator (often a differential operator)</li>
+                <li>$\lambda > 0$ is a regularization parameter</li>
+            </ul>
+        </p>
+        <p>
+            The classic form uses $L = I$ (identity), resulting in a penalty on the norm of the solution:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} \|Vf - y\|^2 + \lambda \|f\|^2$$</p>
+        </div>
+        <p>
+            Key properties of Tikhonov regularization include:
+        </p>
+        <ul>
+            <li>It is a quadratic regularization method (penalizes the squared norm)</li>
+            <li>It promotes smooth solutions when $L$ is a differential operator</li>
+            <li>It has a closed-form solution when working in Hilbert spaces</li>
+            <li>The regularization parameter $\lambda$ controls the trade-off between data fidelity and solution complexity</li>
+        </ul>
+        <p>
+            The general form of Tikhonov regularization can be viewed as:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} G(Vf) + \lambda \|Lf\|^2$$</p>
+        </div>
+        <p>
+            where $G$ is a data fidelity term. This is related to but different from the paper's formulation:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} G(Vf) + \|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            The key differences are:
+        </p>
+        <ul>
+            <li>The paper uses the total variation norm rather than a squared norm</li>
+            <li>The regularization operator $R_m$ is specific to the Radon domain</li>
+            <li>The total variation norm promotes sparsity, leading to solutions with few neurons</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a classic case of Tikhonov regularization in the context of kernel methods. The classical representer theorem states that the solution to:
+            </p>
+            <p>$$\min_{f \in \mathcal{H}} \sum_{n=1}^N \ell(f(x_n), y_n) + \lambda \|f\|_{\mathcal{H}}^2$$</p>
+            <p>
+                where $\mathcal{H}$ is a reproducing kernel Hilbert space with kernel $k$, has the form:
+            </p>
+            <p>$$f(x) = \sum_{n=1}^N \alpha_n k(x, x_n)$$</p>
+            <p>
+                This is analogous to the paper's representer theorem, but with key differences:
+            </p>
+            <ol>
+                <li>The paper's result applies to Banach spaces rather than Hilbert spaces</li>
+                <li>The regularization term uses the total variation norm rather than a squared norm</li>
+                <li>The solution takes the form of a neural network rather than a kernel expansion</li>
+            </ol>
+            <p>
+                For instance, with weight decay regularization (a form of Tikhonov regularization), a neural network training problem might be:
+            </p>
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(f_\theta(x_n), y_n) + \frac{\lambda}{2} \sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^{2m-2})$$</p>
+            <p>
+                The paper shows that this is equivalent to their variational problem with total variation regularization in the Radon domain when $m=2$ (corresponding to ReLU networks).
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="ivanov_estimators.html">Ivanov Estimators</a></li>
+            <li><a href="morozov_regularization.html">Morozov Regularization</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

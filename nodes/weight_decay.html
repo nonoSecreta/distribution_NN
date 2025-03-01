@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Decay Regularization</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Weight Decay Regularization</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Weight decay regularization is a quadratic penalty on neural network weights that, as shown by Parhi and Nowak, is equivalent to minimizing a total variation seminorm in the Radon domain, providing theoretical justification for its effectiveness in improving generalization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Weight decay is one of the most widely used regularization techniques in deep learning practice. Originally proposed by Krogh and Hertz (1992), it involves adding a quadratic penalty on the weights to the loss function during neural network training. This approach has become standard in practice due to its simplicity, effectiveness, and compatibility with optimization methods like stochastic gradient descent.
+        </p>
+        <p>
+            Despite its empirical success, the theoretical understanding of weight decay has been relatively limited. The standard explanation that it prevents overfitting by reducing the "capacity" of the model is somewhat unsatisfying from a mathematical perspective. The paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines" provides a deeper theoretical justification by establishing an equivalence between weight decay and total variation regularization in the Radon domain.
+        </p>
+        <p>
+            This equivalence reveals that weight decay is not just a convenient computational trick but has a principled functional interpretation - it controls the complexity of the function represented by the neural network in a mathematically meaningful way. This insight helps explain why weight decay effectively improves generalization despite the neural network's overparameterization.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            For a single-hidden layer neural network with parameters $$\theta = (v_1,...,v_K, w_1,...,w_K, b_1,...,b_K, c)$$, the weight decay regularization term is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\frac{1}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^{2m-2})$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$v_k$$ are the output layer weights</li>
+            <li>$$w_k$$ are the input layer weights</li>
+            <li>$$m-1$$ is the algebraic growth rate of the activation function</li>
+        </ul>
+        <p>
+            For ReLU networks ($$m=2$$), this simplifies to the familiar form:
+        </p>
+        <div class="definition">
+            <p>$$\frac{1}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^2)$$</p>
+        </div>
+        <p>
+            Key properties and insights about weight decay regularization from the paper include:
+        </p>
+        <ul>
+            <li>It is mathematically equivalent to the path-norm regularization when the neural network weights are optimally balanced</li>
+            <li>The equivalence to path-norm means it implicitly minimizes the total variation norm in the Radon domain</li>
+            <li>The exponent in the weight term ($$2m-2$$) should be adapted based on the activation function's algebraic growth rate</li>
+            <li>Weight decay promotes solutions that are single-hidden layer neural networks with a bounded number of neurons</li>
+            <li>It guarantees good generalization properties by controlling the Rademacher complexity of the function class</li>
+        </ul>
+        <p>
+            The paper shows that the quadratic form of weight decay is not arbitrary - it arises naturally from the optimal balancing of weights in the path-norm formulation. This provides a theoretical explanation for why the quadratic penalty works so well in practice.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider training a single-hidden layer ReLU network on a regression problem with data $$\{(x_n, y_n)\}_{n=1}^{200}$$. We can set up the training problem with weight decay regularization as:
+            </p>
+            <p>$$\min_{\theta} \sum_{n=1}^{200} (f_\theta(x_n) - y_n)^2 + \frac{\lambda}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^2)$$</p>
+            <p>
+                where $$f_\theta(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$ is our ReLU network.
+            </p>
+            <p>
+                According to the paper's results, this problem is equivalent to:
+            </p>
+            <p>$$\min_{f \in \mathcal{F}_2} \sum_{n=1}^{200} (f(x_n) - y_n)^2 + \lambda\|R_2 f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+            <p>
+                The optimal solution will be a ReLU network with at most 200 neurons (plus a linear term), regardless of the initial width $$K$$.
+            </p>
+            <p>
+                To understand how this works in practice, consider what happens during optimization:
+            </p>
+            <ol>
+                <li>Initially, the weights are randomly distributed</li>
+                <li>During training, the weight decay penalty encourages most weights to become very small</li>
+                <li>Only the most important neurons (those that significantly reduce the training error) retain substantial weights</li>
+                <li>The final network effectively uses only a small subset of the available neurons</li>
+                <li>The sparsity of the solution in the Radon domain corresponds to this reduced effective complexity</li>
+            </ol>
+            <p>
+                If we were to use a different activation function, such as $$\rho_3(t) = \frac{\max\{0,t\}^2}{2}$$ (which has algebraic growth rate $$m-1 = 2$$), the appropriate weight decay term would be $$\frac{1}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^4)$$. The paper's framework suggests that this modified weight decay is better matched to the activation function's properties.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="activation_functions.html">Activation Functions</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="binary_classification.html">Binary Classification</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

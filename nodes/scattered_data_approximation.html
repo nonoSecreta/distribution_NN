@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scattered Data Approximation</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Scattered Data Approximation</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Scattered data approximation is the problem of fitting a function to data points that are irregularly distributed in space. In the paper, this problem is formulated as a continuous-domain inverse problem with total variation regularization in the Radon domain, with solutions taking the form of single-hidden layer neural networks.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Scattered data approximation is a fundamental problem in machine learning and computational mathematics with numerous applications. The paper provides a novel perspective on this problem by:
+        </p>
+        <ul>
+            <li>Formulating it as a continuous-domain inverse problem with total variation regularization</li>
+            <li>Showing that neural networks with appropriate regularization are optimal solutions</li>
+            <li>Establishing connections to classical spline theory and variational methods</li>
+            <li>Providing insights into why neural networks generalize well from limited data</li>
+        </ul>
+        <p>
+            This approach bridges the gap between the practical success of neural networks and the theoretical understanding of function approximation, offering a principled explanation for why neural networks are effective for learning from scattered data.
+        </p>
+        <h2>Mathematical Formulation</h2>
+        <p>
+            The scattered data approximation problem involves a dataset $\{(x_n, y_n)\}_{n=1}^N \subset \mathbb{R}^d \times \mathbb{R}$ of input-output pairs, where the inputs $x_n$ are irregularly distributed in $\mathbb{R}^d$. The goal is to find a function $f: \mathbb{R}^d \to \mathbb{R}$ that:
+        </p>
+        <ul>
+            <li>Fits the data well: $f(x_n) \approx y_n$ for all $n$</li>
+            <li>Generalizes to new inputs not in the training set</li>
+            <li>Has desirable properties such as smoothness or sparsity</li>
+        </ul>
+        <p>
+            In the paper, this problem is formulated as a variational problem:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} G(Vf) + \|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$\mathcal{F}_m$ is the native space of the operator $R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$</li>
+                <li>$V$ is the measurement operator, which in the ideal sampling case is $Vf = (f(x_1), \ldots, f(x_N))$</li>
+                <li>$G$ is a data fitting term, such as the squared error $G(Vf) = \sum_{n=1}^N (f(x_n) - y_n)^2$</li>
+                <li>$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$ is a regularization term promoting sparsity in the Radon domain</li>
+            </ul>
+        </p>
+        <p>
+            The paper's representer theorem (Theorem 1) shows that the solution to this variational problem takes the form:
+        </p>
+        <div class="definition">
+            <p>$$f(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$K \leq N - \dim \mathcal{N}_m$ (a bound on the number of neurons)</li>
+                <li>$\rho_m(t) = \max\{0, t\}^{m-1}/(m-1)!$ is the activation function</li>
+                <li>$w_k \in S^{d-1}$, $v_k \in \mathbb{R}$, and $b_k \in \mathbb{R}$ are the neural network parameters</li>
+                <li>$c(x)$ is a polynomial of degree less than $m$ (from the null space of $R_m$)</li>
+            </ul>
+        </p>
+        <p>
+            This result shows that single-hidden layer neural networks with specific activation functions are the optimal solutions to scattered data approximation problems with total variation regularization in the Radon domain.
+        </p>
+        <p>
+            The paper further shows that this continuous-domain problem can be recast as finite-dimensional neural network training problems:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta \in \Theta} G(Vf_\theta) + \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+        </div>
+        <p>
+            or equivalently:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta \in \Theta} G(Vf_\theta) + \frac{1}{2}\sum_{k=1}^K (|v_k|^2 + \|w_k\|_2^{2m-2})$$</p>
+        </div>
+        <p>
+            These correspond to path-norm regularization and weight decay regularization, respectively, providing theoretical justification for these commonly used regularization techniques in neural network training.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the problem of fitting a ReLU network to a dataset $\{(x_n, y_n)\}_{n=1}^N$ in $\mathbb{R}^2$, where the data points are irregularly scattered.
+            </p>
+            <p>
+                Using the paper's framework with $m=2$ (ReLU activation), we would solve the optimization problem:
+            </p>
+            <p>$$\min_{f \in \mathcal{F}_2} \sum_{n=1}^N (f(x_n) - y_n)^2 + \lambda \|R_2 f\|_{M(S^{1}\times\mathbb{R})}$$</p>
+            <p>
+                According to the representer theorem, the solution takes the form:
+            </p>
+            <p>$$f(x) = \sum_{k=1}^K v_k \max\{0, w_k^T x - b_k\} + u^T x + s$$</p>
+            <p>
+                where $K \leq N-3$ (since the null space of $R_2$ in $\mathbb{R}^2$ has dimension 3), $w_k \in S^1$, and $u^T x + s$ is an affine function.
+            </p>
+            <p>
+                This can be equivalently formulated as the neural network training problem:
+            </p>
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N (f_\theta(x_n) - y_n)^2 + \lambda \sum_{k=1}^K |v_k|\|w_k\|_2$$</p>
+            <p>
+                where $\theta = (w_1, \ldots, w_K, v_1, \ldots, v_K, b_1, \ldots, b_K, u, s)$.
+            </p>
+            <p>
+                This example illustrates how the paper's framework provides a theoretical foundation for using regularized neural networks for scattered data approximation, explaining why they are effective and how the regularization controls their complexity.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="univariate_splines.html">Connection to Univariate Splines</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

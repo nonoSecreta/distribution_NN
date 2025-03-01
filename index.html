@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banach Space Representer Theorems for Neural Networks</title>
+    <link rel="stylesheet" href="css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+    <h1>Banach Space Representer Theorems for Neural Networks and Ridge Splines</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            This paper develops a variational framework that shows single-hidden layer neural networks are solutions to continuous-domain linear inverse problems with total variation-like regularization in the Radon domain.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Understanding the functional properties of neural networks is crucial for developing better training methods and providing theoretical guarantees. Traditional neural network analysis has focused on approximation theory and risk bounds, but less attention has been given to the functional analytic perspective. This paper bridges this gap by developing a variational framework that views neural network training as a continuous-domain inverse problem.
+        </p>
+        <p>
+            By connecting neural networks to spline theory via total variation regularization in the Radon domain, the authors provide novel insights into the structure of functions learned by neural networks. This connection explains why trained neural networks generalize well despite their overparameterization, and provides theoretical justification for common regularization techniques like weight decay and path-norm regularization.
+        </p>
+        <h2>Overview</h2>
+        <p>
+            The paper studies the properties of functions learned by neural networks through a variational framework involving continuous-domain linear inverse problems with total variation-like regularization in the Radon domain. The authors derive a representer theorem showing that single-hidden layer neural networks with truncated power activation functions are solutions to these inverse problems.
+        </p>
+        <p>
+            They introduce the concept of polynomial ridge splines, which correspond to single-hidden layer neural networks, and show that these problems can be recast as finite-dimensional neural network training problems with regularizers related to weight decay and path-norm. The framework also provides generalization bounds for neural network solutions, showing that networks with bounded seminorm exhibit good generalization properties.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider trying to fit a function to data points using a neural network. The representer theorem shows that when using appropriate regularization (related to total variation in the Radon domain), the optimal solution will be a single-hidden layer neural network with no more neurons than data points. For instance, to fit 10 data points, the optimal solution requires at most 10 neurons, regardless of how many neurons we initialize with.
+            </p>
+            <p>
+                More concretely, if we consider a ReLU network ($$m=2$$ in the paper's notation) training problem:
+            </p>
+            <p>
+                $$\min_{\theta} \sum_{n=1}^{N} \ell(f_{\theta}(x_n), y_n) + \lambda \sum_{k=1}^{K} |v_k|\|w_k\|_2$$
+            </p>
+            <p>
+                where 
+                $$f_{\theta}(x) = \sum_{k=1}^{K} v_k\max\{0, w_k^T x - b_k\} + u^T x + s$$
+            </p>
+            <p>
+                The paper proves that this regularized training problem is equivalent to an infinite-dimensional variational problem, and the solution will have at most $$N$$ neurons, regardless of how large $$K$$ is initially chosen.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Key Concepts</h3>
+        <ul>
+            <li><a href="nodes/variational_framework.html">Variational Framework</a></li>
+            <li><a href="nodes/ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="nodes/radon_transform.html">Radon Transform</a></li>
+            <li><a href="nodes/neural_networks.html">Neural Networks</a></li>
+            <li><a href="nodes/ridge_splines.html">Ridge Splines</a></li>
+        </ul>
+        <h3>Key Theorems & Results</h3>
+        <ul>
+            <li><a href="nodes/representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="nodes/neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="nodes/statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+        <h3>Supporting Concepts</h3>
+        <ul>
+            <li><a href="nodes/inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="nodes/total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="nodes/banach_spaces.html">Banach Spaces</a></li>
+            <li><a href="nodes/spline_theory.html">Spline Theory</a></li>
+            <li><a href="nodes/radon_domain.html">Radon Domain</a></li>
+        </ul>
+    </div>
+</body>
+</html>

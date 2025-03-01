@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radon Transform</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Radon Transform</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The Radon transform is a fundamental mathematical tool that integrates a function over hyperplanes, creating a bridge between ridge functions, neural networks, and splines in the paper's variational framework.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The Radon transform plays a central role in the paper's variational framework because it provides a natural connection between ridge functions (the building blocks of neural networks) and a domain where total variation regularization can be meaningfully applied. By working in the Radon domain, we can establish sparsity of solutions, proving that single-hidden layer neural networks are optimal solutions to certain variational problems.
+        </p>
+        <p>
+            While originally developed for applications in tomography and medical imaging, the Radon transform has profound theoretical implications in functional analysis and, as this paper demonstrates, in understanding the properties of neural networks. It allows us to characterize the complexity of functions learned by neural networks in a principled way.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The Radon transform $\mathcal{R}$ of a function $f: \mathbb{R}^d \to \mathbb{R}$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{R}\{f\}(\gamma, t) := \int_{\{x:\gamma^T x=t\}} f(x) \, ds(x), \quad (\gamma, t) \in S^{d-1} \times \mathbb{R}$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$S^{d-1}$ is the unit sphere in $\mathbb{R}^d$</li>
+                <li>$\gamma \in S^{d-1}$ specifies the direction of the hyperplane</li>
+                <li>$t \in \mathbb{R}$ specifies the offset of the hyperplane from the origin</li>
+                <li>$ds$ is the surface measure on the hyperplane $\{x: \gamma^T x = t\}$</li>
+            </ul>
+        </p>
+        <p>
+            The Radon transform integrates a function over all possible hyperplanes in $\mathbb{R}^d$, and the result is a function on the Radon domain $S^{d-1} \times \mathbb{R}$. Key properties include:
+        </p>
+        <ul>
+            <li>The Radon transform of a function is always even: $\mathcal{R}\{f\}(\gamma, t) = \mathcal{R}\{f\}(-\gamma, -t)$</li>
+            <li>It has an inversion formula: $f = c_d \mathcal{R}^* \Lambda_{d-1} \mathcal{R}f$, where $\mathcal{R}^*$ is the dual Radon transform and $\Lambda_{d-1}$ is a "ramp filter"</li>
+            <li>The Radon transform is particularly useful for analyzing ridge functions, since $\mathcal{R}\{\rho(w^T x - b)\}(\gamma, t)$ is concentrated on the hyperplane where $\gamma = \pm\frac{w}{\|w\|_2}$ and $t = \pm\frac{b}{\|w\|_2}$</li>
+            <li>For distributions, the transform needs to be defined using Lizorkin test functions to ensure proper behavior</li>
+        </ul>
+        <p>
+            In the paper, the authors define the operator $R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$, which combines the Radon transform with a ramp filter and $m$th-order partial derivatives with respect to $t$. This operator is central to their variational framework.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a ReLU neuron in 2D: $f(x) = \max\{0, w^T x - b\}$ with $w = (1, 0)$ and $b = 0$.
+            </p>
+            <p>
+                This function is positive in the right half-plane $(x_1 > 0)$ and zero elsewhere. Its Radon transform $\mathcal{R}\{f\}(\gamma, t)$ integrates this function along lines with normal vector $\gamma$ and offset $t$.
+            </p>
+            <p>
+                When we apply $R_2 = c_d \partial_t^2 \Lambda_{d-1} \mathcal{R}$ to this function, we get a Dirac impulse in the Radon domain at $(\gamma, t) = ((1,0), 0)$, which corresponds to the line $x_1 = 0$ where the ReLU function has its "hinge".
+            </p>
+            <p>
+                This sparsification effect is illustrated in Figure 3 of the paper, where applying $R_2$ to a 2D ReLU network with 7 neurons results in exactly 7 Dirac impulses in the Radon domain, one for each neuron. This sparse representation in the Radon domain is the key to understanding why neural networks with total variation regularization yield solutions with few neurons.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+            <li><a href="radon_inversion.html">Radon Inversion Formula</a></li>
+            <li><a href="ramp_filter.html">Ramp Filter</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

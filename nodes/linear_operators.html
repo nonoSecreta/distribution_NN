@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Operators</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Linear Operators</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Linear operators form the mathematical foundation of the paper's variational framework, providing the essential tools for analyzing how neural networks relate to solutions of continuous-domain inverse problems and explaining their functional properties through operator theory.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Linear operators provide a powerful framework for understanding transformations between function spaces, enabling the mathematical analysis of complex relationships such as those between neural networks and their representations in the Radon domain. In the paper by Parhi and Nowak, operators play a central role in developing the variational framework that connects neural networks to continuous-domain inverse problems.
+        </p>
+        <p>
+            The key insight of the paper—that single-hidden layer neural networks are solutions to certain inverse problems with total variation regularization in the Radon domain—is fundamentally built on an analysis of specific linear operators and their properties. Understanding these operators and their mathematical characteristics is therefore essential for grasping the theoretical contributions of the paper.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A linear operator $$T$$ between vector spaces $$V$$ and $$W$$ is a map $$T: V \rightarrow W$$ that satisfies:
+        </p>
+        <ul>
+            <li>$$T(x + y) = T(x) + T(y)$$ for all $$x, y \in V$$ (additivity)</li>
+            <li>$$T(\alpha x) = \alpha T(x)$$ for all $$x \in V$$ and scalars $$\alpha$$ (homogeneity)</li>
+        </ul>
+        <p>
+            In the context of function spaces, linear operators transform functions into other functions or, more generally, into distributions. Some important properties and characteristics of linear operators include:
+        </p>
+        <ul>
+            <li><strong>Domain and Range</strong>: The set of inputs where the operator is defined (domain) and the set of possible outputs (range)</li>
+            <li><strong>Boundedness</strong>: An operator is bounded if it maps bounded sets to bounded sets</li>
+            <li><strong>Continuity</strong>: Related to boundedness in normed spaces; ensures small changes in input produce small changes in output</li>
+            <li><strong>Null Space</strong>: The set of inputs mapped to zero, denoted $$\mathcal{N}(T) = \{x \in V : T(x) = 0\}$$</li>
+            <li><strong>Range Space</strong>: The set of actual outputs, denoted $$\mathcal{R}(T) = \{T(x) : x \in V\}$$</li>
+            <li><strong>Adjoint</strong>: For Hilbert spaces, the operator $$T^*$$ satisfying $$\langle T(x), y \rangle = \langle x, T^*(y) \rangle$$</li>
+            <li><strong>Inverse</strong>: An operator $$T^{-1}$$ such that $$T^{-1}(T(x)) = x$$ for all $$x \in V$$</li>
+        </ul>
+        <p>
+            In the paper, several specific operators are crucial:
+        </p>
+        <ul>
+            <li>The Radon transform $$\mathcal{R}$$ and its dual $$\mathcal{R}^*$$</li>
+            <li>The differential operator $$\partial_t^m$$ (mth partial derivative with respect to t)</li>
+            <li>The ramp filter $$\Lambda_{d-1}$$ in the Radon domain</li>
+            <li>The composite operator $$R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$$</li>
+            <li>The measurement operator $$V$$ (e.g., ideal sampling)</li>
+        </ul>
+        <p>
+            Of particular importance is the operator $$R_m$$, which plays a central role in the paper's variational framework. This operator has several key properties:
+        </p>
+        <ul>
+            <li>It maps ridge functions (neurons) to Dirac measures in the Radon domain</li>
+            <li>Its null space $$\mathcal{N}_m$$ consists of polynomials of degree less than $$m$$</li>
+            <li>Its native space $$\mathcal{F}_m$$ is the domain where $$R_m$$ maps to measures</li>
+            <li>When equipped with a proper direct-sum topology, $$\mathcal{F}_m$$ forms a Banach space</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Let's consider the specific operator $$R_2$$ (corresponding to $$m=2$$, the ReLU case) and its action on a simple ridge function. For a ReLU neuron:
+            </p>
+            <p>
+                $$r(x) = \max\{0, w^Tx - b\}$$
+            </p>
+            <p>
+                applying $$R_2$$ yields:
+            </p>
+            <p>
+                $$R_2\{r\} = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - (w/\|w\|_2, b/\|w\|_2)) + \delta_{S^{d-1}\times\mathbb{R}}(\cdot + (w/\|w\|_2, b/\|w\|_2))}{2}$$
+            </p>
+            <p>
+                where $$\delta_{S^{d-1}\times\mathbb{R}}$$ is the Dirac impulse on the Radon domain.
+            </p>
+            <p>
+                This "sparsification" effect is crucial for the paper's representer theorem. When we consider a neural network:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$
+            </p>
+            <p>
+                we have:
+            </p>
+            <p>
+                $$R_2\{f\} = \sum_{k=1}^K v_k R_2\{\max\{0, w_k^Tx - b_k\}\}$$
+            </p>
+            <p>
+                since the linear term $$u^Tx + s$$ is in the null space of $$R_2$$. This leads to:
+            </p>
+            <p>
+                $$\|R_2 f\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2$$
+            </p>
+            <p>
+                This example illustrates how operators transform neural networks into sparse representations in the Radon domain, revealing their underlying structure and complexity.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="biorthogonal_systems.html">Biorthogonal Systems</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+            <li><a href="direct_sum_topology.html">Direct-Sum Topology</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

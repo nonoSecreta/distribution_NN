@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Null Space</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Null Space</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The null space (or kernel) of an operator consists of all functions that the operator maps to zero, playing a crucial role in the paper's representer theorem by determining the polynomial components of neural network solutions.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Understanding the null space of an operator is essential for characterizing the structure of solutions to variational problems. In the context of the paper, the null space of the operator $$R_m$$ determines the polynomial components that appear in neural network solutions to the continuous-domain inverse problem.
+        </p>
+        <p>
+            The size and structure of the null space directly influence the complexity of the optimization problem. A key insight from the paper is that the null space of $$R_m$$ is finite-dimensional, consisting of polynomials of degree less than $$m$$. This property allows for the development of the representer theorem, showing that solutions to the variational problem are single-hidden layer neural networks plus a polynomial term from this null space.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            For a linear operator $$L$$, the null space $$\mathcal{N}_L$$ is defined as the set of all elements that the operator maps to zero:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{N}_L = \{f \in \text{Dom}(L) : Lf = 0\}$$</p>
+        </div>
+        <p>
+            In the context of the paper, the authors define the (growth restricted) null space of the operator $$R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$$ as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{N}_m = \{q \in L^{\infty, m-1}(\mathbb{R}^d) : R_m q = 0\}$$</p>
+        </div>
+        <p>
+            where $$L^{\infty, m-1}(\mathbb{R}^d)$$ is the space of functions with algebraic growth rate $$m-1$$, defined via the weighted $$L^\infty$$-norm:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{\infty, m-1} := \text{ess sup}_{x \in \mathbb{R}^d} |f(x)|(1 + \|x\|_2)^{-(m-1)}$$</p>
+        </div>
+        <p>
+            The authors prove (Lemma 19 in the paper) that $$\mathcal{N}_m$$ is the space of polynomials of degree strictly less than $$m$$. This characterization is crucial for several reasons:
+        </p>
+        <ul>
+            <li>It identifies the exact structure of the polynomial term $$c(x)$$ in the neural network solution</li>
+            <li>It establishes that $$\mathcal{N}_m$$ is finite-dimensional, which is necessary for the representer theorem</li>
+            <li>It enables the construction of a biorthogonal system for $$\mathcal{N}_m$$, which is used in developing the proof</li>
+            <li>It helps explain the structure of ReLU networks ($$m=2$$), which include a linear term (from $$\mathcal{N}_2$$) corresponding to "skip connections" in deep learning terminology</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Let's examine the null space for $$m=2$$, which corresponds to ReLU networks. The operator $$R_2 = c_d \partial_t^2 \Lambda_{d-1} \mathcal{R}$$ maps functions to (even) elements of $$M(S^{d-1} \times \mathbb{R})$$.
+            </p>
+            <p>
+                For $$m=2$$, the null space $$\mathcal{N}_2$$ consists of polynomials of degree at most 1, i.e., linear functions:
+            </p>
+            <p>
+                $$\mathcal{N}_2 = \{q(x) = u^T x + s : u \in \mathbb{R}^d, s \in \mathbb{R}\}$$
+            </p>
+            <p>
+                When we apply $$R_2$$ to any function in $$\mathcal{N}_2$$, we get zero. This can be verified using the Fourier slice theorem: the Fourier transform of $$\mathcal{R}q$$ is zero at the origin, and the second derivative $$\partial_t^2$$ increases the order of zeros at the origin, ensuring that $$R_2 q = 0$$.
+            </p>
+            <p>
+                In the context of neural networks, this means that adding a linear function $$u^T x + s$$ to a ReLU network doesn't change its $$R_2$$-seminorm. In deep learning terminology, this linear component corresponds to a "skip connection" that bypasses the hidden layer. The representer theorem tells us that the optimal solution to the variational problem will be a ReLU network plus exactly this type of linear term.
+            </p>
+            <p>
+                Similarly, for $$m=3$$, the null space $$\mathcal{N}_3$$ consists of polynomials of degree at most 2, leading to quadratic components in the optimal solution when using quadratic activation functions.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="biorthogonal_systems.html">Biorthogonal Systems</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="operators.html">Linear Operators</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

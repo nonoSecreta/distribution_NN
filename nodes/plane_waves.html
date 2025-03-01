@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plane Waves</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Plane Waves</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Plane waves are solutions to partial differential equations that are constant along hyperplanes, representing the historical precursor to the modern concept of ridge functions used in neural networks.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Plane waves have been a fundamental concept in physics and mathematics long before the development of neural networks. They arise naturally as solutions to wave equations and other partial differential equations (PDEs), providing a convenient basis for representing more complex wave phenomena through superposition.
+        </p>
+        <p>
+            Understanding the connection between plane waves and ridge functions provides historical context for neural network theory. The mathematics developed for analyzing plane waves in physics and PDEs has been repurposed and extended to understand ridge functions in machine learning, demonstrating how seemingly disparate fields can share mathematical foundations.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A plane wave in $$\mathbb{R}^d$$ is a function of the form:
+        </p>
+        <div class="definition">
+            <p>$$f(x) = e^{i(\omega t - k \cdot x)}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$x \in \mathbb{R}^d$$ is the spatial variable</li>
+            <li>$$t$$ is time</li>
+            <li>$$\omega$$ is the angular frequency</li>
+            <li>$$k$$ is the wave vector, determining the direction of propagation</li>
+        </ul>
+        <p>
+            The key property of a plane wave is that it is constant along hyperplanes perpendicular to the direction of $$k$$. Specifically, for any $$x_1$$ and $$x_2$$ such that $$k \cdot x_1 = k \cdot x_2$$, we have $$f(x_1) = f(x_2)$$.
+        </p>
+        <p>
+            In the context of PDEs, particularly the wave equation:
+        </p>
+        <div class="definition">
+            <p>$$\frac{\partial^2 u}{\partial t^2} = c^2 \nabla^2 u$$</p>
+        </div>
+        <p>
+            plane waves provide elementary solutions. More complex solutions can be constructed as superpositions of plane waves, essentially representing the solution in the Fourier domain.
+        </p>
+        <p>
+            The connection to ridge functions and neural networks becomes clear when we consider the real part of a plane wave with fixed time:
+        </p>
+        <div class="definition">
+            <p>$$\text{Re}(e^{i(k \cdot x)}) = \cos(k \cdot x)$$</p>
+        </div>
+        <p>
+            This is a ridge function with $$\rho(t) = \cos(t)$$ and $$w = k$$. More generally, ridge functions used in neural networks can be viewed as generalizations of plane waves where the periodic activation functions (like sine or cosine) are replaced by other univariate functions (like ReLU or sigmoid).
+        </p>
+        <p>
+            Just as complex wave phenomena can be represented as superpositions of plane waves, complex functions can be approximated by superpositions of ridge functions in neural networks. This analogy highlights why the Radon transform, which has been extensively used in the analysis of plane waves, becomes a natural tool for analyzing neural networks.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the wave equation in two dimensions, describing the propagation of waves on a surface like a drum:
+            </p>
+            <p>$$\frac{\partial^2 u}{\partial t^2} = c^2 \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \right)$$</p>
+            <p>
+                A plane wave solution to this equation has the form:
+            </p>
+            <p>$$u(x,y,t) = A\cos(k_x x + k_y y - \omega t + \phi)$$</p>
+            <p>
+                where $$(k_x, k_y)$$ is the wave vector, $$\omega$$ is the frequency, and $$\phi$$ is a phase constant. If we fix $$(k_x, k_y) = (3, 4)$$, $$\omega = 5c$$, $$\phi = 0$$, and $$A = 1$$, we get:
+            </p>
+            <p>$$u(x,y,t) = \cos(3x + 4y - 5ct)$$</p>
+            <p>
+                At any fixed time $$t$$, this is a ridge function with $$w = (3, 4)$$ and $$\rho(s) = \cos(s - 5ct)$$. The wave has constant amplitude along lines of the form $$3x + 4y = \text{constant}$$, which are perpendicular to the direction of propagation $$(3, 4)$$.
+            </p>
+            <p>
+                Similarly, a ReLU neural network unit with $$w = (3, 4)$$ and $$b = 5$$ computes:
+            </p>
+            <p>$$f(x,y) = \max\{0, 3x + 4y - 5\}$$</p>
+            <p>
+                This function is constant (zero) on one side of the line $$3x + 4y = 5$$ and grows linearly in the direction perpendicular to this line on the other side. While different in form from the plane wave, both functions have constant values along parallel hyperplanes, illustrating the conceptual link between plane waves and ridge functions.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="ridgelets.html">Ridgelets</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="function_approximation.html">Function Approximation</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

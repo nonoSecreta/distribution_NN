@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Generalization</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Statistical Generalization</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The paper establishes statistical generalization bounds for neural networks by showing that the seminorm in the Radon domain directly controls the Rademacher complexity of the neural network function class.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            A key question in machine learning theory is why neural networks generalize well despite being overparameterized. Traditional statistical learning theory suggests that models with many parameters should overfit, yet in practice, neural networks with millions of parameters can still generalize well when trained properly with regularization.
+        </p>
+        <p>
+            The paper addresses this paradox by establishing a direct connection between the functional complexity of neural networks (measured by a seminorm in the Radon domain) and their statistical generalization ability. This provides theoretical justification for neural network regularization and explains why regularized neural networks can generalize well despite having many parameters.
+        </p>
+        <h2>Key Results</h2>
+        <p>
+            The paper considers neural networks for binary classification, where the goal is to predict labels $y \in \{-1, +1\}$ from input features $x \in \mathbb{R}^d$. The prediction is given by $\text{sign}(f(x))$, where $f$ is a neural network trained to minimize:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f\in\mathcal{F}_m} \sum_{n=1}^N \ell(y_n f(x_n)) \text{ s.t. } \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} \leq B$$</p>
+        </div>
+        <p>
+            where $\ell$ is a loss function (like hinge loss) and $B$ is a regularization constant. The main generalization result bounds the Rademacher complexity of the hypothesis space:
+        </p>
+        <div class="theorem">
+            <p>$$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2BC^{m-1}}{\sqrt{N(m-1)!}} + \mathcal{R}(c)$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$\mathcal{F}_\Theta$ is the class of neural networks with bounded seminorm $\|R_m f\|_{M(S^{d-1}\times\mathbb{R})} \leq B$</li>
+                <li>$C$ is a bound on the input data: $\|x_n\|_2 \leq C/2$</li>
+                <li>$\mathcal{R}(c)$ is the Rademacher complexity of the polynomial terms</li>
+            </ul>
+        </p>
+        <p>
+            This result has several important implications:
+        </p>
+        <ul>
+            <li>The generalization error is directly controlled by the seminorm $\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$, which corresponds to the total variation norm in the Radon domain</li>
+            <li>Regularization methods like weight decay and path-norm regularization, which are equivalent to controlling this seminorm, promote good generalization</li>
+            <li>The bound scales as $O(1/\sqrt{N})$, which is the optimal rate for non-parametric methods</li>
+            <li>The complexity increases with the order $m$ of the activation function, suggesting that simpler activation functions (like ReLU, where $m=2$) might generalize better</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a binary classification problem where we use ReLU networks ($m=2$) to classify data points in $\mathbb{R}^2$. Our data consists of $N=100$ points, and the features are normalized to have $\|x_n\|_2 \leq 1$.
+            </p>
+            <p>
+                We train a neural network with the constraint $\|R_2 f\|_{M(S^{d-1}\times\mathbb{R})} \leq 5$, which is equivalent to training with path-norm regularization: $\sum_{k=1}^K |v_k|\|w_k\|_2 \leq 5$.
+            </p>
+            <p>
+                The generalization bound gives us:
+            </p>
+            <p>
+                $$\mathcal{R}(\mathcal{F}_\Theta) \leq \frac{2 \cdot 5 \cdot 1^1}{\sqrt{100 \cdot 1!}} = \frac{10}{\sqrt{100}} = \frac{1}{\sqrt{N}} = 0.1$$
+            </p>
+            <p>
+                This means that with high probability, the generalization error (probability of misclassification on new data) is at most the training error plus approximately 0.1 (plus a small term for the linear part of the model).
+            </p>
+            <p>
+                The key insight is that this bound depends only on the regularization parameter $B$ and the sample size $N$, not on the number of neurons $K$ in the network. This explains why overparameterized networks (with $K \gg N$) can still generalize well when properly regularized.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="binary_classification.html">Binary Classification</a></li>
+            <li><a href="rademacher_complexity.html">Rademacher Complexity</a></li>
+            <li><a href="ivanov_estimators.html">Ivanov Estimators</a></li>
+        </ul>
+        <h3>Theoretical Foundations</h3>
+        <ul>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="function_approximation.html">Function Approximation</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

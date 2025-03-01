@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Representer Theorem for Neural Networks</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Representer Theorem for Neural Networks</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The neural network representer theorem states that single-hidden layer neural networks are solutions to continuous-domain linear inverse problems with total variation regularization in the Radon domain.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Representer theorems are fundamental results in machine learning that characterize the structure of solutions to certain optimization problems. The classical representer theorem for kernel methods shows that the solution to regularized empirical risk minimization in a reproducing kernel Hilbert space (RKHS) is a linear combination of kernel functions centered at the training points. This powerful result has been the foundation of kernel methods, but doesn't extend to neural networks.
+        </p>
+        <p>
+            This paper's representer theorem bridges this gap by showing that neural networks are solutions to a different class of optimization problems - those with total variation regularization in the Radon domain. This provides theoretical justification for why neural networks perform well and insights into their functional properties.
+        </p>
+        <h2>Theorem Statement and Proof Overview</h2>
+        <p>
+            The theorem states that for continuous-domain linear inverse problems of the form:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} G(Vf) + \|R_m f\|_{M(S^{d-1} \times \mathbb{R})}$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$$G$$ is a strictly convex, coercive, and lower semi-continuous function</li>
+                <li>$$V$$ is a continuous, linear, and surjective operator</li>
+                <li>$$\mathcal{F}_m$$ is the native space of $$R_m$$</li>
+                <li>$$R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$$, with $$\mathcal{R}$$ being the Radon transform</li>
+            </ul>
+        </p>
+        <p>
+            There exists a sparse solution of the form:
+        </p>
+        <div class="definition">
+            <p>$$s(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$</p>
+        </div>
+        <p>
+            where $$K \leq N - \text{dim} \, \mathcal{N}_m$$, $$\rho_m = \frac{\max\{0,\cdot\}^{m-1}}{(m-1)!}$$ is the mth-order truncated power function, $$w_k \in S^{d-1}$$, $$v_k \in \mathbb{R}$$, $$b_k \in \mathbb{R}$$, and $$c(\cdot)$$ is a polynomial of degree strictly less than $$m$$.
+        </p>
+        <p>
+            The proof leverages techniques from variational spline theory and involves several technical steps:
+        </p>
+        <ol>
+            <li>Establishing the topological structure of the native space $$\mathcal{F}_m$$ as a Banach space</li>
+            <li>Characterizing the null space $$\mathcal{N}_m$$ of the operator $$R_m$$</li>
+            <li>Constructing a stable right inverse of $$R_m$$</li>
+            <li>Reducing the problem to a Radon measure recovery problem</li>
+            <li>Showing that the solution to this reduced problem is sparse</li>
+        </ol>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the problem of fitting a function to data points $$\{(x_n, y_n)\}_{n=1}^N$$ using a regularized objective:
+            </p>
+            <p>
+                $$\min_{f \in \mathcal{F}_m} \sum_{n=1}^N (f(x_n) - y_n)^2 + \lambda\|R_m f\|_{M(S^{d-1} \times \mathbb{R})}$$
+            </p>
+            <p>
+                The representer theorem guarantees that the solution is a single-hidden layer neural network with at most N neurons (plus a polynomial of degree less than m).
+            </p>
+            <p>
+                For m=2 (ReLU activation), the solution takes the form:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^T x - b_k\} + u^T x + s$$
+            </p>
+            <p>
+                where $$K \leq N - (d+1)$$, and $$u^T x + s$$ is a linear function (the null space term).
+            </p>
+            <p>
+                This explains why overparameterized neural networks (with more neurons than data points) can still generalize well - the effective solution has bounded complexity due to regularization, regardless of the network's initial width.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="variational_framework.html">Variational Framework</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="m_norm.html">M-Norm</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+        </ul>
+        <h3>Technical Components</h3>
+        <ul>
+            <li><a href="biorthogonal_systems.html">Biorthogonal Systems</a></li>
+            <li><a href="direct_sum_topology.html">Direct-Sum Topology</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

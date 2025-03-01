@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path-Norm Regularization</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Path-Norm Regularization</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Path-norm regularization is a sparsity-promoting neural network regularization technique that corresponds to the total variation norm in the Radon domain, providing a principled approach to controlling network complexity and enhancing generalization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Although neural networks have demonstrated remarkable empirical success, their tendency to overfit data without proper regularization remains a significant challenge. Regularization methods are essential for improving neural network generalization, but the theoretical foundations of these methods have been less developed compared to their practical applications.
+        </p>
+        <p>
+            Path-norm regularization was introduced by Neyshabur et al. (2015) as a network complexity measure that considers both weights and network architecture. This approach was motivated by the need for a regularization method that accounts for the particular structure of neural networks and their input-to-output paths, rather than simply penalizing large weights as in traditional weight decay.
+        </p>
+        <p>
+            The paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines" establishes a deep theoretical connection between path-norm regularization and the total variation norm in the Radon domain. This connection provides a functional-analytic understanding of why path-norm regularization effectively controls model complexity and enhances generalization.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            For a single-hidden layer neural network with parameters $$\theta = (v_1,...,v_K, w_1,...,w_K, b_1,...,b_K, c)$$, the path-norm regularization term is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$v_k$$ are the output layer weights</li>
+            <li>$$w_k$$ are the input layer weights</li>
+            <li>$$m-1$$ is the algebraic growth rate of the activation function</li>
+        </ul>
+        <p>
+            For ReLU networks ($$m=2$$), this simplifies to:
+        </p>
+        <div class="definition">
+            <p>$$\sum_{k=1}^K |v_k|\|w_k\|_2$$</p>
+        </div>
+        <p>
+            Key properties of path-norm regularization include:
+        </p>
+        <ul>
+            <li>It directly corresponds to the total variation norm of the network function in the Radon domain: $$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</li>
+            <li>It promotes sparsity in the number of neurons, encouraging solutions with few active neurons</li>
+            <li>It is invariant to reparameterizations that preserve the function, making it a more principled measure of function complexity</li>
+            <li>It automatically adapts to the growth rate of the activation function, providing appropriate regularization for different activation types</li>
+            <li>It provides tighter generalization bounds than weight-based regularization methods</li>
+        </ul>
+        <p>
+            The connection to the total variation norm in the Radon domain reveals that path-norm regularization has a natural mathematical interpretation: it measures the complexity of the function in terms of its sparsity in an appropriate transform domain, similar to how LASSO regression promotes sparsity in the parameter domain.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a binary classification problem with a dataset $$\{(x_n, y_n)\}_{n=1}^{100}$$ where $$y_n \in \{-1, +1\}$$ and $$x_n \in \mathbb{R}^2$$. We want to train a ReLU network to separate the classes while ensuring good generalization.
+            </p>
+            <p>
+                Using path-norm regularization, we can formulate the training problem as:
+            </p>
+            <p>$$\min_{\theta} \sum_{n=1}^{100} \max\{0, 1 - y_n f_\theta(x_n)\} + \lambda\sum_{k=1}^K |v_k|\|w_k\|_2$$</p>
+            <p>
+                where $$f_\theta(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$ is our ReLU network with hinge loss.
+            </p>
+            <p>
+                Even if we initialize with a large number of neurons (e.g., $$K = 1000$$), the path-norm regularization will encourage most of the neurons to have zero contribution ($$v_k = 0$$), resulting in a sparse network. According to the representer theorem proven in the paper, the optimal solution will have at most 100 neurons (the number of data points).
+            </p>
+            <p>
+                If we compute the Radon transform of the resulting function $$f_\theta$$, we will find that $$R_2 f_\theta$$ consists of a small number of Dirac impulses in the Radon domain, with the sum of their magnitudes exactly equal to the path-norm value. This sparsity in the Radon domain translates to a simple, generalizable function in the input space.
+            </p>
+            <p>
+                By controlling the regularization parameter $$\lambda$$, we can trade off between fitting the training data perfectly and obtaining a simpler model with better generalization properties. The paper proves that the generalization error is directly controlled by the path-norm, providing theoretical justification for this regularization approach.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="binary_classification.html">Binary Classification</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

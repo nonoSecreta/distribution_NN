@@ -1,0 +1,26 @@
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo

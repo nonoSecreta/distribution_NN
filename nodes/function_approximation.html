@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Approximation</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Function Approximation</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Function approximation theory studies how well various classes of functions can approximate arbitrary functions, with neural networks being one such class that offers universal approximation capabilities under mild conditions.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            A fundamental question in approximation theory is: how well can simpler functions approximate more complex ones? This question is central to many practical applications in machine learning, statistics, and numerical analysis, where we often need to model complex phenomena using parameterized functions with manageable complexity.
+        </p>
+        <p>
+            In the context of neural networks, function approximation theory provides theoretical guarantees about the representational power of neural networks. Understanding these approximation capabilities helps explain why neural networks work well in practice and guides the design of network architectures and training methods.
+        </p>
+        <h2>Key Principles</h2>
+        <p>
+            The core focus of function approximation theory is establishing bounds on how closely functions from one class can approximate functions from another class. Several important concepts include:
+        </p>
+        <ul>
+            <li><strong>Universal Approximation:</strong> A class of functions $$\mathcal{F}$$ is said to be universal if it can approximate any continuous function on a compact domain to arbitrary precision</li>
+            <li><strong>Approximation Rates:</strong> How quickly the approximation error decreases as the complexity of the approximator increases</li>
+            <li><strong>Function Spaces:</strong> Different spaces of functions (e.g., Hölder spaces, Sobolev spaces) capture different smoothness properties and lead to different approximation rates</li>
+            <li><strong>Complexity Measures:</strong> Ways to quantify the complexity of approximating functions, such as number of parameters, VC dimension, or Rademacher complexity</li>
+        </ul>
+        <p>
+            For neural networks, the universal approximation theorem states that single-hidden layer networks with mild conditions on the activation function can approximate any continuous function on a compact domain to arbitrary precision, given enough neurons. Mathematically, for any continuous function $$f$$ on a compact domain $$\Omega \subset \mathbb{R}^d$$ and any $$\epsilon > 0$$, there exists a neural network $$f_\theta$$ with:
+        </p>
+        <div class="definition">
+            <p>$$f_\theta(x) = \sum_{k=1}^K v_k \rho(w_k^T x - b_k)$$</p>
+        </div>
+        <p>
+            such that 
+        </p>
+        <div class="definition">
+            <p>$$\sup_{x \in \Omega} |f(x) - f_\theta(x)| < \epsilon$$</p>
+        </div>
+        <p>
+            Beyond mere existence, more refined analyses provide bounds on:
+        </p>
+        <ul>
+            <li>The number of neurons $$K$$ required to achieve a given approximation error</li>
+            <li>The approximation rates for functions with specific smoothness properties</li>
+            <li>The bias-variance tradeoff in the statistical learning setting</li>
+        </ul>
+        <p>
+            The paper "Banach Space Representer Theorems for Neural Networks and Ridge Splines" builds upon function approximation theory by characterizing the solutions to variational problems with total variation regularization in the Radon domain. It shows that these solutions are single-hidden layer neural networks with a bound on the number of neurons, providing both approximation guarantees and sparsity properties.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider approximating the function $$f(x) = |x|$$ on $$[-1, 1]$$ using a ReLU network. The function $$f$$ has a "kink" at $$x = 0$$, which makes it challenging to approximate using smooth functions like polynomials.
+            </p>
+            <p>
+                A ReLU network can represent this function exactly with just two neurons:
+            </p>
+            <p>$$f_\theta(x) = \max\{0, x\} + \max\{0, -x\} = |x|$$</p>
+            <p>
+                More generally, a single-hidden layer ReLU network with $$K$$ neurons can exactly represent any continuous piecewise linear function with $$K$$ "kinks" on $$\mathbb{R}$$. This demonstrates the efficiency of neural networks in approximating non-smooth functions compared to traditional approximators like polynomials.
+            </p>
+            <p>
+                For a general continuous function $$f$$ on $$[-1, 1]$$, the approximation error using $$K$$ neurons scales as $$O(K^{-2/d})$$ for functions with bounded variation in the Radon domain, where $$d$$ is the input dimension. This rate is optimal for this function class and demonstrates the connection between the paper's variational framework and classical approximation theory.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+            <li><a href="scattered_data.html">Scattered Data Approximation</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

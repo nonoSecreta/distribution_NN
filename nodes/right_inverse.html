@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Right Inverse Operators</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Right Inverse Operators</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Right inverse operators are fundamental in functional analysis, allowing the reconstruction of functions from their transformed versions. In the paper, the construction of a stable right inverse for the operator $R_m$ is crucial for establishing the Banach space structure of the native space and proving the representer theorem.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Right inverse operators play a critical role in the paper's theoretical framework for several reasons:
+        </p>
+        <ul>
+            <li>They allow the inversion of the operator $R_m$, reconstructing functions from their representations in the Radon domain</li>
+            <li>They enable the characterization of the native space $F_m$ as a Banach space</li>
+            <li>They provide a way to represent solutions to the variational problem in terms of neural networks</li>
+            <li>They establish connections between the paper's framework and classical spline theory</li>
+        </ul>
+        <p>
+            The construction of a stable right inverse for $R_m$ is a key technical achievement in the paper, enabling the authors to prove their representer theorem and establish the connection between neural networks and ridge splines.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            For a linear operator $T: X \to Y$ between two spaces, a right inverse of $T$ is an operator $S: Y \to X$ such that:
+        </p>
+        <div class="definition">
+            <p>$$T \circ S = I_Y$$</p>
+        </div>
+        <p>
+            where $I_Y$ is the identity operator on $Y$. In other words, applying $T$ followed by $S$ gives back the original element in $Y$.
+        </p>
+        <p>
+            Key properties of right inverses include:
+        </p>
+        <ul>
+            <li>A right inverse exists if and only if $T$ is surjective (onto)</li>
+            <li>If $T$ has a non-trivial null space, then $S$ is not unique</li>
+            <li>A stable right inverse is one that is bounded (continuous)</li>
+            <li>If $S$ is a right inverse of $T$, then every element in the domain of $T$ can be written as $Sy + n$ for some $y$ in the range of $T$ and some $n$ in the null space of $T$</li>
+        </ul>
+        <p>
+            In the paper, the authors construct a specific right inverse $R_{m,\phi}^{-1}$ of the operator $R_m$ with the following properties:
+        </p>
+        <div class="definition">
+            <p>$$R_m \circ R_{m,\phi}^{-1} = I \quad \text{(right-inverse property)}$$</p>
+            <p>$$\phi(R_{m,\phi}^{-1} \psi) = 0 \quad \text{(boundary conditions)}$$</p>
+        </div>
+        <p>
+            where $\phi = (\phi_1, \ldots, \phi_{N_0})$ is a collection of functionals that forms a biorthogonal system with a basis for the null space of $R_m$.
+        </p>
+        <p>
+            This right inverse has the explicit form:
+        </p>
+        <div class="definition">
+            <p>$$R_{m,\phi}^{-1}\psi = \int_{S^{d-1}\times\mathbb{R}} g_{m,\phi}(\cdot, z) \psi(z) \, d(σ \times λ)(z)$$</p>
+        </div>
+        <p>
+            with kernel:
+        </p>
+        <div class="definition">
+            <p>$$g_{m,\phi}(x, z) = r_z^{(m)}(x) - \sum_{n=1}^{N_0} p_n(x) q_n(z)$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$r_z^{(m)}(x) = \rho_m(w^T x - b)$ for $z = (w, b)$</li>
+                <li>$\{p_n\}_{n=1}^{N_0}$ is a basis for the null space of $R_m$</li>
+                <li>$q_n(z) = \langle \phi_n, r_z^{(m)} \rangle$</li>
+            </ul>
+        </p>
+        <p>
+            In Theorem 22, the authors prove that $R_{m,\phi}^{-1}$ is bounded, mapping $M_{even}(S^{d-1} \times \mathbb{R})$ (when $m$ is even) or $M_{odd}(S^{d-1} \times \mathbb{R})$ (when $m$ is odd) isometrically to the subspace $F_{m,\phi} = \{f \in F_m : \phi(f) = 0\}$. This establishes the Banach space structure of $F_m$ and enables the proof of the representer theorem.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the operator $R_2$ corresponding to $m=2$ (the ReLU case). Its null space $N_2$ consists of affine functions $q(x) = u^T x + s$ where $u \in \mathbb{R}^d$ and $s \in \mathbb{R}$.
+            </p>
+            <p>
+                To construct $R_{2,\phi}^{-1}$, we need a biorthogonal system $(\phi, p)$ for $N_2$. One possible choice is to use point evaluations at specific locations:
+            </p>
+            <p>
+                Let $\{x_n\}_{n=1}^{d+1}$ be points in general position (not lying on a hyperplane) and let $\phi_n(f) = f(x_n)$ for $n = 1, \ldots, d+1$. Then, we can find a basis $\{p_n\}_{n=1}^{d+1}$ for $N_2$ such that $p_n(x_k) = \delta[n-k]$.
+            </p>
+            <p>
+                With this biorthogonal system, the right inverse $R_{2,\phi}^{-1}$ maps a measure $u \in M_{even}(S^{d-1} \times \mathbb{R})$ to a function:
+            </p>
+            <p>$$R_{2,\phi}^{-1}u(x) = \int_{S^{d-1}\times\mathbb{R}} \max\{0, w^T x - b\} \, du(w, b) - \sum_{n=1}^{d+1} p_n(x) \int_{S^{d-1}\times\mathbb{R}} q_n(w, b) \, du(w, b)$$</p>
+            <p>
+                When $u = \sum_{k=1}^K v_k \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - (w_k, b_k)) + \delta_{S^{d-1}\times\mathbb{R}}(\cdot + (w_k, b_k))}{2}$, this becomes:
+            </p>
+            <p>$$R_{2,\phi}^{-1}u(x) = \sum_{k=1}^K v_k \max\{0, w_k^T x - b_k\} - \sum_{n=1}^{d+1} p_n(x) \sum_{k=1}^K v_k q_n(w_k, b_k)$$</p>
+            <p>
+                This gives a ReLU network with a specific correction term from the null space, ensuring the boundary conditions $\phi(R_{2,\phi}^{-1}u) = 0$ are satisfied.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="linear_operators.html">Linear Operators</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="biorthogonal_systems.html">Biorthogonal Systems</a></li>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="greens_functions.html">Green's Functions</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

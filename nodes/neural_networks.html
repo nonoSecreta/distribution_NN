@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Networks</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Neural Networks</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            In the context of this paper, neural networks are studied as superpositions of ridge functions, with particular focus on single-hidden layer networks and their connection to variational problems and spline theory.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Neural networks have achieved remarkable success in various fields, but our theoretical understanding of their properties remains incomplete. By studying neural networks from a functional-analytic perspective, we can gain insights into why they work well, what kinds of functions they represent, and how to design better regularization strategies and training methods.
+        </p>
+        <p>
+            Understanding the mathematical structure of neural networks also allows us to connect them to classical mathematical objects like splines, enabling us to leverage well-established theories from functional analysis and approximation theory to develop a more principled approach to neural network design and training.
+        </p>
+        <h2>Key Properties</h2>
+        <p>
+            The paper focuses on single-hidden layer neural networks, which are functions of the form:
+        </p>
+        <div class="definition">
+            <p>$$f(x) = \sum_{k=1}^K v_k \rho(w_k^T x - b_k)$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$$\rho: \mathbb{R} \to \mathbb{R}$$ is the activation function</li>
+                <li>$$K$$ is the width (number of neurons) of the network</li>
+                <li>$$v_k \in \mathbb{R}$$ are the output weights</li>
+                <li>$$w_k \in \mathbb{R}^d$$ are the input weights</li>
+                <li>$$b_k \in \mathbb{R}$$ are the biases</li>
+            </ul>
+        </p>
+        <p>
+            Key properties and results about these networks include:
+        </p>
+        <ul>
+            <li>They can be viewed as superpositions of ridge functions, where a ridge function is any multivariate function of the form $$x \mapsto \rho(w^T x)$$</li>
+            <li>With truncated power activation functions ($$\rho_m = \frac{\max\{0,\cdot\}^{m-1}}{(m-1)!}$$), they correspond to polynomial ridge splines</li>
+            <li>When trained with appropriate regularization, they are solutions to continuous-domain linear inverse problems with total variation regularization in the Radon domain</li>
+            <li>Despite potentially large width (many neurons), regularized solutions have a sparse representation with at most $$N$$ neurons (where $$N$$ is the number of data points)</li>
+            <li>Common regularization strategies like weight decay and path-norm regularization have direct connections to total variation seminorms in the Radon domain</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a ReLU network for binary classification of points in $$\mathbb{R}^2$$:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^{10} v_k\max\{0, w_k^T x - b_k\} + u^T x + s$$
+            </p>
+            <p>
+                This network has 10 hidden neurons with ReLU activation, plus a skip connection (linear term). Each neuron defines a "hinge" along the hyperplane $$w_k^T x = b_k$$. When trained with weight decay regularization, this is equivalent to minimizing a total variation seminorm in the Radon domain.
+            </p>
+            <p>
+                The paper shows that if we train this network on $$N=50$$ data points with appropriate regularization, the optimal solution will have at most 50 active neurons (non-zero $$v_k$$), regardless of how many neurons we started with. The locations of these neurons (defined by $$w_k$$ and $$b_k$$) adapt to the data, placing "hinges" only where needed to fit the data efficiently.
+            </p>
+            <p>
+                Remarkably, if we visualize the solution in the Radon domain by applying the $$R_2$$ operator, we get exactly 50 Dirac impulses, one for each neuron. This sparsity in the Radon domain helps explain why neural networks generalize well despite being overparameterized.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Network Components</h3>
+        <ul>
+            <li><a href="single_hidden_layer.html">Single Hidden Layer Networks</a></li>
+            <li><a href="activation_functions.html">Activation Functions</a></li>
+            <li><a href="network_weights.html">Network Weights & Bias</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+        <h3>Applications & Properties</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="function_approximation.html">Function Approximation</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

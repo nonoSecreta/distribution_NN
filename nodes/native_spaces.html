@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native Spaces</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Native Spaces</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Native spaces are function spaces determined by an operator, consisting of all functions for which the operator produces a well-defined result, forming the foundation of the paper's variational approach to neural networks.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In variational problems and inverse problems, it's essential to define an appropriate function space in which to seek solutions. The native space of an operator provides a natural framework for this purpose, capturing all functions for which the operator's action is well-defined and has desired properties.
+        </p>
+        <p>
+            In the paper, the authors introduce a family of operators $$R_m$$ that connect neural networks to total variation regularization in the Radon domain. Understanding the native spaces of these operators is crucial for developing the representer theorem, as it establishes the topological structure needed to prove existence of solutions and characterize their properties.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            Given an operator $$L$$, its native space $$\mathcal{F}_L$$ typically consists of all functions for which $$L$$ produces a meaningful result with certain properties. In the paper's context, the (growth restricted) native space of the operator $$R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$$ is defined as:
+        </p>
+        <div class="definition">
+            <p>$$\mathcal{F}_m = \{f \in L^{\infty, m-1}(\mathbb{R}^d) : R_m f \in M(S^{d-1} \times \mathbb{R})\}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$L^{\infty, m-1}(\mathbb{R}^d)$$ is the space of functions with algebraic growth rate $$m-1$$</li>
+            <li>$$M(S^{d-1} \times \mathbb{R})$$ is the space of finite Radon measures on the Radon domain</li>
+        </ul>
+        <p>
+            A key contribution of the paper is establishing that $$\mathcal{F}_m$$ possesses a Banach space structure when equipped with an appropriate norm. This structure is crucial for proving the representer theorem. Specifically, the authors show (Theorem 22 in the paper) that:
+        </p>
+        <ol>
+            <li>The native space $$\mathcal{F}_m$$ can be decomposed as a direct sum: $$\mathcal{F}_m = \mathcal{F}_{m,\phi} \oplus \mathcal{N}_m$$, where $$\mathcal{N}_m$$ is the null space and $$\mathcal{F}_{m,\phi}$$ consists of functions that satisfy certain boundary conditions</li>
+            <li>Every function $$f \in \mathcal{F}_m$$ can be uniquely represented as $$f = R^{-1}_{m,\phi}u + q$$, where $$u = R_m f \in M(S^{d-1} \times \mathbb{R})$$ and $$q \in \mathcal{N}_m$$</li>
+            <li>$$\mathcal{F}_m$$ is a Banach space when equipped with the norm $$\|f\|_{\mathcal{F}_m} = \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} + \|\phi(f)\|_2$$</li>
+        </ol>
+        <p>
+            This characterization enables the authors to recast the variational problem into an equivalent Radon measure recovery problem, which admits sparse solutions corresponding to single-hidden layer neural networks.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                To illustrate the concept of native spaces, let's consider the case of $$m=2$$, which corresponds to ReLU networks. The operator is $$R_2 = c_d \partial_t^2 \Lambda_{d-1} \mathcal{R}$$, and its native space $$\mathcal{F}_2$$ consists of all functions that:
+            </p>
+            <ol>
+                <li>Have at most linear growth (are in $$L^{\infty, 1}(\mathbb{R}^d)$$)</li>
+                <li>Result in a finite Radon measure when $$R_2$$ is applied to them</li>
+            </ol>
+            <p>
+                A single ReLU neuron $$r(x) = \max\{0, w^T x - b\}$$ belongs to this native space $$\mathcal{F}_2$$. When we apply $$R_2$$ to it, we get a Dirac impulse in the Radon domain (as shown in Lemma 17 of the paper):
+            </p>
+            <p>
+                $$R_2 r = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - (w/\|w\|_2, b/\|w\|_2)) + \delta_{S^{d-1}\times\mathbb{R}}(\cdot + (w/\|w\|_2, b/\|w\|_2))}{2}$$
+            </p>
+            <p>
+                This Dirac impulse is a finite Radon measure on $$S^{d-1} \times \mathbb{R}$$, confirming that the ReLU neuron is indeed in the native space $$\mathcal{F}_2$$.
+            </p>
+            <p>
+                Similarly, any ReLU network (sum of ReLU neurons) plus a linear term (from the null space $$\mathcal{N}_2$$) is in $$\mathcal{F}_2$$. In fact, the representer theorem tells us that these functions are precisely the solutions to the variational problem.
+            </p>
+            <p>
+                When we equip $$\mathcal{F}_2$$ with the norm $$\|f\|_{\mathcal{F}_2} = \|R_2 f\|_{M(S^{d-1}\times\mathbb{R})} + \|\phi(f)\|_2$$, it becomes a Banach space. For a ReLU network plus a linear term, this norm reduces to:
+            </p>
+            <p>
+                $$\|f\|_{\mathcal{F}_2} = \sum_{k=1}^K |v_k|\|w_k\|_2 + \sqrt{\|u\|_2^2 + s^2}$$
+            </p>
+            <p>
+                where $$u^T x + s$$ is the linear term. This norm has a natural interpretation: it measures both the complexity of the nonlinear part (via the total variation in the Radon domain) and the magnitude of the linear part.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+            <li><a href="direct_sum_topology.html">Direct-Sum Topology</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="operators.html">Linear Operators</a></li>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="m_norm.html">M-Norm</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

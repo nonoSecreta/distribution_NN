@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banach Spaces</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Banach Spaces</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Banach spaces provide the functional-analytic foundation for the paper's variational framework, establishing the topological structure needed to prove existence of solutions and derive the representer theorem.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Understanding the mathematical structure of function spaces is crucial for analyzing variational problems and proving properties of their solutions. Banach spaces, which are complete normed vector spaces, provide the appropriate framework for this analysis because they guarantee the existence of limits of Cauchy sequences, enabling various fixed-point theorems and optimization results.
+        </p>
+        <p>
+            In the paper, establishing that the native space of the operator $R_m$ forms a Banach space is a critical step in proving the representer theorem. This structure allows the authors to rigorously analyze the variational problem, prove existence of solutions, and characterize the form of these solutions as single-hidden layer neural networks.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A Banach space is a complete normed vector space, meaning it is a vector space $X$ equipped with a norm $\|\cdot\|: X \rightarrow \mathbb{R}_{\geq 0}$ such that every Cauchy sequence in $X$ converges to an element of $X$.
+        </p>
+        <div class="definition">
+            <p>
+                A norm on a vector space $X$ must satisfy:
+                <ol>
+                    <li>$\|x\| \geq 0$ for all $x \in X$, and $\|x\| = 0$ if and only if $x = 0$ (positive-definiteness)</li>
+                    <li>$\|\alpha x\| = |\alpha| \cdot \|x\|$ for all $x \in X$ and scalars $\alpha$ (homogeneity)</li>
+                    <li>$\|x + y\| \leq \|x\| + \|y\|$ for all $x, y \in X$ (triangle inequality)</li>
+                </ol>
+            </p>
+        </div>
+        <p>
+            In the paper, the authors establish that the native space $\mathcal{F}_m$ of the operator $R_m$ forms a Banach space when equipped with the norm:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{\mathcal{F}_m} := \|R_m f\|_{M(S^{d-1}\times\mathbb{R})} + \|\phi(f)\|_2$$</p>
+        </div>
+        <p>
+            where $\phi(f)$ represents the coefficients of $f$ in a basis for the null space $\mathcal{N}_m$ of $R_m$.
+        </p>
+        <p>
+            Key results about this space include:
+        </p>
+        <ul>
+            <li>The native space $\mathcal{F}_m$ decomposes as a direct sum: $\mathcal{F}_m = \mathcal{F}_{m,\phi} \oplus \mathcal{N}_m$, where $\mathcal{F}_{m,\phi}$ is the subspace of functions satisfying $\phi(f) = 0$</li>
+            <li>The null space $\mathcal{N}_m$ consists of polynomials of degree strictly less than $m$</li>
+            <li>The operator $R_m$ isometrically maps $\mathcal{F}_{m,\phi}$ to a space of measures on $S^{d-1} \times \mathbb{R}$</li>
+            <li>Every function $f \in \mathcal{F}_m$ admits a unique representation $f = R^{-1}_{m,\phi}u + q$, where $u = R_m f$ and $q \in \mathcal{N}_m$</li>
+        </ul>
+        <p>
+            This Banach space structure is crucial for the paper's analysis because it provides:
+        </p>
+        <ul>
+            <li>A well-defined notion of convergence for functions in the native space</li>
+            <li>The ability to prove existence of minimizers to the variational problem</li>
+            <li>A framework for establishing the representer theorem</li>
+            <li>A theoretical foundation for recasting infinite-dimensional optimization problems as finite-dimensional neural network training problems</li>
+        </ul>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                To understand the Banach space structure in the paper, consider the case where $m=2$ (corresponding to ReLU networks) in two dimensions.
+            </p>
+            <p>
+                The null space $\mathcal{N}_2$ consists of linear functions: $\mathcal{N}_2 = \{x \mapsto u^Tx + s : u \in \mathbb{R}^2, s \in \mathbb{R}\}$, which is a finite-dimensional space with dimension 3.
+            </p>
+            <p>
+                For a function $f$ in the native space $\mathcal{F}_2$, we can write:
+            </p>
+            <p>
+                $$f(x) = \underbrace{\sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\}}_{\text{part in }\mathcal{F}_{2,\phi}} + \underbrace{u^Tx + s}_{\text{part in }\mathcal{N}_2}$$
+            </p>
+            <p>
+                The norm of $f$ is:
+            </p>
+            <p>
+                $$\|f\|_{\mathcal{F}_2} = \sum_{k=1}^K |v_k|\|w_k\|_2 + \sqrt{\|u\|_2^2 + s^2}$$
+            </p>
+            <p>
+                This norm measures both the complexity of the "nonlinear part" (the sum of ReLU terms) via the total variation in the Radon domain and the "linear part" via a standard Euclidean norm.
+            </p>
+            <p>
+                When we solve the variational problem:
+            </p>
+            <p>
+                $$\min_{f \in \mathcal{F}_2} G(Vf) + \|R_2 f\|_{M(S^{1}\times\mathbb{R})}$$
+            </p>
+            <p>
+                The Banach space structure guarantees that a solution exists and takes the form of a neural network with a finite number of neurons plus a linear term.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+            <li><a href="null_space.html">Null Space</a></li>
+            <li><a href="direct_sum_topology.html">Direct-Sum Topology</a></li>
+            <li><a href="biorthogonal_systems.html">Biorthogonal Systems</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="variational_framework.html">Variational Framework</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

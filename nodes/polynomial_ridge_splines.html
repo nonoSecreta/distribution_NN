@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polynomial Ridge Splines</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Polynomial Ridge Splines</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Polynomial ridge splines are a specific class of ridge splines that use truncated power functions as activation functions, establishing a direct connection between single-hidden layer neural networks and classical spline theory.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In the paper's development of a variational framework for neural networks, a key conceptual bridge is needed between the discrete world of neural networks and the continuous-domain theory of splines. Polynomial ridge splines provide this bridge by showing that neural networks with specific activation functions (truncated power functions) share fundamental properties with classical polynomial splines.
+        </p>
+        <p>
+            This connection allows the authors to leverage established results from spline theory to analyze neural networks, leading to insights about their approximation capabilities, structural properties, and optimality conditions. By viewing neural networks as multivariate splines, the paper provides a mathematical framework that explains why appropriately regularized neural networks exhibit desirable properties such as smoothness, interpretability, and generalization.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A nonuniform polynomial ridge spline of order $$m$$ is formally defined as a function $$s: \mathbb{R}^d \to \mathbb{R}$$ satisfying:
+        </p>
+        <div class="definition">
+            <p>$$R_m\{s\} = \sum_{k=1}^K v_k\left[\frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - z_k) + (-1)^m\delta_{S^{d-1}\times\mathbb{R}}(\cdot + z_k)}{2}\right]$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$R_m = c_d\partial_t^m\Lambda_{d-1}\mathcal{R}$$ is the operator combining the Radon transform with a ramp filter and derivatives</li>
+            <li>$$v_k$$ are weights</li>
+            <li>$$z_k = (w_k, b_k) \in S^{d-1} \times \mathbb{R}$$ are the "knots" in the Radon domain</li>
+            <li>$$\delta_{S^{d-1}\times\mathbb{R}}$$ is the Dirac impulse on the Radon domain</li>
+        </ul>
+        <p>
+            Equivalently, a polynomial ridge spline of order $$m$$ can be expressed as:
+        </p>
+        <div class="definition">
+            <p>$$s(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\rho_m(t) = \frac{\max\{0,t\}^{m-1}}{(m-1)!}$$ is the truncated power function of order $$m$$</li>
+            <li>$$c(x)$$ is a polynomial of degree strictly less than $$m$$</li>
+        </ul>
+        <p>
+            Key properties of polynomial ridge splines include:
+        </p>
+        <ul>
+            <li>For $$m=2$$, they correspond to ReLU networks: $$\rho_2(t) = \max\{0,t\}$$</li>
+            <li>For $$m=3$$, they yield quadratic ridge splines: $$\rho_3(t) = \frac{\max\{0,t\}^2}{2}$$</li>
+            <li>For $$m=4$$, they give cubic ridge splines: $$\rho_4(t) = \frac{\max\{0,t\}^3}{6}$$</li>
+            <li>They are piecewise polynomials with continuous derivatives up to order $$m-2$$</li>
+            <li>The "knots" or "hinges" occur at hyperplanes $$w_k^T x = b_k$$</li>
+            <li>In one dimension ($$d=1$$), they exactly coincide with classical univariate polynomial splines</li>
+            <li>The operator $$R_m$$ "sparsifies" polynomial ridge splines, similar to how differential operators sparsify univariate splines</li>
+        </ul>
+        <p>
+            Importantly, these splines have minimal seminorm $$\|R_m s\|_{M(S^{d-1}\times\mathbb{R})}$$ among all functions interpolating given data points, which explains why they arise naturally as solutions to the variational problems studied in the paper.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a cubic polynomial ridge spline in two dimensions ($$m=4$$, $$d=2$$). The spline has the form:
+            </p>
+            <p>
+                $$s(x) = \sum_{k=1}^K v_k \frac{\max\{0, w_k^Tx - b_k\}^3}{6} + c_0 + c_1x_1 + c_2x_2 + c_3x_1^2 + c_4x_1x_2 + c_5x_2^2 + c_6x_1^3 + c_7x_1^2x_2 + c_8x_1x_2^2 + c_9x_2^3$$
+            </p>
+            <p>
+                This is a multivariate piecewise polynomial function that:
+            </p>
+            <ul>
+                <li>Is continuous and has continuous first and second derivatives everywhere</li>
+                <li>Has "hinges" along the hyperplanes $$w_k^Tx = b_k$$</li>
+                <li>Grows as the cube of the distance from these hyperplanes in the direction of $$w_k$$</li>
+                <li>Behaves as a cubic polynomial on each side of the hyperplanes</li>
+            </ul>
+            <p>
+                When we apply the operator $$R_4$$ to this spline, we get a sum of Dirac impulses in the Radon domain:
+            </p>
+            <p>
+                $$R_4 s = \sum_{k=1}^K v_k \left[\frac{\delta_{S^{1}\times\mathbb{R}}(\cdot - (w_k, b_k)) + \delta_{S^{1}\times\mathbb{R}}(\cdot + (w_k, b_k))}{2}\right]$$
+            </p>
+            <p>
+                This sparsification property is similar to how the fourth derivative of a univariate cubic spline yields a sum of Dirac impulses at the knot locations. The total variation norm $$\|R_4 s\|_{M(S^{1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|$$ provides a measure of the spline's complexity.
+            </p>
+            <p>
+                When fitting data points with this spline while minimizing this seminorm, we obtain a sparse representation that uses as few "knots" as possible while still interpolating the data, similar to how classical univariate splines work.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="activation_functions.html">Activation Functions</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+            <li><a href="univariate_splines.html">Connection to Univariate Splines</a></li>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

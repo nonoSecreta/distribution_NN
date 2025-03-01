@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schwartz Space</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Schwartz Space</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The Schwartz space $S(\mathbb{R}^d)$ consists of smooth, rapidly decaying functions and serves as the foundation for the theory of tempered distributions. In the paper, it provides the test functions needed to define the Radon transform and establish its properties in distribution spaces.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The Schwartz space plays a critical role in the paper's mathematical framework for several reasons:
+        </p>
+        <ul>
+            <li>It provides a well-behaved space of test functions for defining operators like the Radon transform</li>
+            <li>Its dual space, the space of tempered distributions, accommodates generalized functions including the Dirac impulse, which is crucial for the sparsification effects studied in the paper</li>
+            <li>It allows for the extension of Fourier transforms to distributions, enabling the analysis of operators in the frequency domain</li>
+            <li>It contains the Lizorkin test functions as a subspace, which are specifically needed for properly defining the Radon transform of distributions</li>
+        </ul>
+        <p>
+            By working with the Schwartz space and its derivatives, the authors establish a rigorous mathematical foundation for their analysis of ridge functions, neural networks, and splines.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The Schwartz space $S(\mathbb{R}^d)$ is defined as the space of all infinitely differentiable functions $f: \mathbb{R}^d \to \mathbb{C}$ such that for any multi-indices $\alpha$ and $\beta$, the following seminorm is finite:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{\alpha,\beta} = \sup_{x \in \mathbb{R}^d} |x^\alpha D^\beta f(x)| < \infty$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$\alpha = (\alpha_1, \ldots, \alpha_d)$ and $\beta = (\beta_1, \ldots, \beta_d)$ are multi-indices</li>
+                <li>$x^\alpha = x_1^{\alpha_1} \cdots x_d^{\alpha_d}$</li>
+                <li>$D^\beta = \frac{\partial^{|\beta|}}{\partial x_1^{\beta_1} \cdots \partial x_d^{\beta_d}}$ where $|\beta| = \beta_1 + \cdots + \beta_d$</li>
+            </ul>
+        </p>
+        <p>
+            In simpler terms, a function is in the Schwartz space if it and all its derivatives decay faster than any polynomial at infinity. The Schwartz space is equipped with the topology induced by the family of seminorms $\{\|\cdot\|_{\alpha,\beta}\}$.
+        </p>
+        <p>
+            Key properties of the Schwartz space include:
+            <ul>
+                <li>It is a nuclear space, making it suitable for tensor product constructions</li>
+                <li>It is invariant under the Fourier transform</li>
+                <li>It is dense in many function spaces including $L^p(\mathbb{R}^d)$ for $1 \leq p < \infty$</li>
+                <li>Its continuous dual $S'(\mathbb{R}^d)$ is the space of tempered distributions</li>
+            </ul>
+        </p>
+        <p>
+            In the context of the paper, the authors also define the Schwartz space on the Radon domain $S(S^{d-1} \times \mathbb{R})$, which consists of functions $\psi: S^{d-1} \times \mathbb{R} \to \mathbb{C}$ that are smooth and satisfy the decay condition:
+        </p>
+        <div class="definition">
+            <p>$$\sup_{\gamma \in S^{d-1}, t \in \mathbb{R}} \left|(1 + |t|^k) \frac{d^\ell}{dt^\ell} (D\psi)(\gamma, t)\right| < \infty$$</p>
+        </div>
+        <p>
+            for all integers $k, \ell \geq 0$ and all differential operators $D$ in $\gamma$.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                A classic example of a function in the Schwartz space is the Gaussian function:
+            </p>
+            <p>$$f(x) = e^{-\|x\|^2}$$</p>
+            <p>
+                This function is infinitely differentiable, and both the function and all its derivatives decay exponentially at infinity, which is much faster than any polynomial decay. The Gaussian plays an important role in many areas of analysis and is often used as a test function.
+            </p>
+            <p>
+                In the context of the paper, when applying the Radon transform to a function in the Schwartz space, the result is again a well-behaved function in the Schwartz space of the Radon domain. For example, the Radon transform of the Gaussian $f(x) = e^{-\|x\|^2}$ is given by:
+            </p>
+            <p>$$\mathcal{R}\{f\}(\gamma, t) = \sqrt{\pi} e^{-t^2}$$</p>
+            <p>
+                This property ensures that operations like differentiation and filtering in the Radon domain are well-defined when working with Schwartz functions.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="functional_analysis.html">Functional Analysis</a></li>
+            <li><a href="tempered_distributions.html">Tempered Distributions</a></li>
+            <li><a href="lizorkin_test_functions.html">Lizorkin Test Functions</a></li>
+            <li><a href="fourier_transform.html">Fourier Transform</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="radon_transform.html">Radon Transform</a></li>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+            <li><a href="ramp_filter.html">Ramp Filter</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

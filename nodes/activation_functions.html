@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation Functions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Activation Functions</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Activation functions introduce nonlinearity into neural networks, transforming the weighted sum of inputs to a neuron and enabling the network to learn complex patterns, with truncated power functions playing a central role in the paper's theoretical framework connecting neural networks to ridge splines.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Activation functions are fundamental components of neural networks that determine their expressive power and learning capabilities. Without nonlinear activations, neural networks would collapse into simple linear models, regardless of their depth. The choice of activation function significantly impacts a network's performance, convergence properties, and the types of functions it can efficiently represent.
+        </p>
+        <p>
+            In Parhi and Nowak's paper, a specific focus is placed on truncated power activation functions, as they establish a direct connection between neural networks and spline theory. This mathematical link allows the authors to leverage powerful tools from variational analysis and approximation theory to understand neural networks' behavior. The activation function's properties, particularly its algebraic growth rate, determine the appropriate form of regularization and directly influence the network's generalization capabilities.
+        </p>
+        <h2>Truncated Power Activation Functions</h2>
+        <p>
+            The paper introduces a family of truncated power activation functions, denoted as $$\rho_m$$, defined as:
+        </p>
+        <div class="definition">
+            <p>$$\rho_m(t) = \frac{\max\{0,t\}^{m-1}}{(m-1)!}$$</p>
+        </div>
+        <p>
+            where $$m \geq 2$$ is an integer parameter that determines the growth rate and smoothness of the function. Special cases include:
+        </p>
+        <ul>
+            <li>$$m=2$$: $$\rho_2(t) = \max\{0,t\}$$, the ReLU (Rectified Linear Unit) activation</li>
+            <li>$$m=3$$: $$\rho_3(t) = \frac{\max\{0,t\}^2}{2}$$, a quadratic activation</li>
+            <li>$$m=4$$: $$\rho_4(t) = \frac{\max\{0,t\}^3}{6}$$, a cubic activation</li>
+        </ul>
+        <p>
+            These activation functions have several important properties relevant to the paper's theoretical framework:
+        </p>
+        <ul>
+            <li><strong>Algebraic Growth Rate</strong>: A truncated power function $$\rho_m$$ has an algebraic growth rate of $$m-1$$, meaning it grows like $$t^{m-1}$$ for large positive $$t$$</li>
+            <li><strong>Homogeneity</strong>: For $$\alpha > 0$$, $$\rho_m(\alpha t) = \alpha^{m-1} \rho_m(t)$$, a property that allows for network weight normalization</li>
+            <li><strong>Sparsification</strong>: When the operator $$R_m$$ (combining the Radon transform with derivatives) is applied to $$\rho_m(w^Tx - b)$$, it results in a Dirac impulse in the Radon domain</li>
+            <li><strong>Differentiability</strong>: $$\rho_m$$ is $$(m-2)$$-times continuously differentiable, with increasing smoothness as $$m$$ increases</li>
+        </ul>
+        <p>
+            The choice of $$m$$ affects both the function space properties of the resulting neural networks and the appropriate form of regularization. For $$m=2$$ (ReLU), the paper shows that standard weight decay regularization corresponds exactly to minimizing the total variation norm in the Radon domain. For higher values of $$m$$, modified regularizers with different exponents are appropriate.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple regression problem where we want to fit a function with a single-hidden layer neural network. If we use ReLU activation ($$m=2$$) with 5 neurons, our model would take the form:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^5 v_k \max\{0, w_k^T x - b_k\} + u^T x + s$$
+            </p>
+            <p>
+                This would create a piecewise linear function. If we instead use a cubic activation ($$m=4$$):
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^5 v_k \frac{\max\{0, w_k^T x - b_k\}^3}{6} + c(x)$$
+            </p>
+            <p>
+                where $$c(x)$$ is a polynomial of degree at most 3, we would get a much smoother function with continuous first and second derivatives.
+            </p>
+            <p>
+                According to the paper's theory, the appropriate regularization terms would also change:
+            </p>
+            <ul>
+                <li>For ReLU ($$m=2$$): $$\lambda \sum_{k=1}^5 |v_k|\|w_k\|_2$$ or $$\frac{\lambda}{2}\sum_{k=1}^5 (|v_k|^2 + \|w_k\|_2^2)$$</li>
+                <li>For cubic activation ($$m=4$$): $$\lambda \sum_{k=1}^5 |v_k|\|w_k\|_2^3$$ or $$\frac{\lambda}{2}\sum_{k=1}^5 (|v_k|^2 + \|w_k\|_2^6)$$</li>
+            </ul>
+            <p>
+                This example illustrates how the choice of activation function affects both the smoothness of the learned function and the appropriate form of regularization, highlighting the paper's insight that regularization should be matched to the activation function's properties.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="single_hidden_layer.html">Single Hidden Layer Networks</a></li>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+        </ul>
+        <h3>Mathematical Connections</h3>
+        <ul>
+            <li><a href="polynomial_ridge_splines.html">Polynomial Ridge Splines</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

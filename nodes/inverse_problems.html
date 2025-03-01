@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inverse Problems</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Inverse Problems</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Inverse problems involve recovering an unknown function from linear measurements, forming the theoretical foundation for the paper's approach to understanding neural networks as solutions to variational problems.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The theory of inverse problems provides a powerful framework for understanding how to recover information from indirect measurements. This framework is particularly valuable for machine learning, where we often need to reconstruct a function from limited data points. By viewing neural network training through the lens of inverse problems, we gain insights into the structure of solutions and can provide theoretical guarantees about their properties.
+        </p>
+        <p>
+            The paper applies this perspective to neural networks, showing that they can be understood as solutions to continuous-domain linear inverse problems with appropriate regularization. This connection bridges the gap between neural networks and classical function reconstruction methods, providing a theoretical foundation for understanding what kinds of functions neural networks learn and why they generalize well.
+        </p>
+        <h2>Formal Definition</h2>
+        <p>
+            In the paper, the continuous-domain inverse problem is formulated as:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}} G(Vf) + \|f\|$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$\mathcal{F}$ is a topological vector space of multivariate functions</li>
+            <li>$V: \mathcal{F} \rightarrow \mathbb{R}^N$ is a continuous linear sensing or measurement operator</li>
+            <li>$G: \mathbb{R}^N \rightarrow \mathbb{R}$ is a convex data fitting term</li>
+            <li>$\|\cdot\|: \mathcal{F} \rightarrow \mathbb{R}_{\geq 0}$ is a (semi)norm or regularizer</li>
+        </ul>
+        <p>
+            The specific inverse problem studied in the paper uses the seminorm:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{(m)} := c_d\|\partial_t^m\Lambda_{d-1}\mathcal{R}f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            This specialized seminorm, involving the Radon transform $\mathcal{R}$, a ramp filter $\Lambda_{d-1}$, and derivatives $\partial_t^m$, enables the connection between inverse problems and neural networks.
+        </p>
+        <p>
+            A key aspect of inverse problems is that they are often ill-posed, meaning there may be:
+        </p>
+        <ul>
+            <li>No solution (existence issue)</li>
+            <li>Multiple solutions (uniqueness issue)</li>
+            <li>Solutions that don't depend continuously on the data (stability issue)</li>
+        </ul>
+        <p>
+            To address ill-posedness, regularization is employed, which restricts the solution space and promotes desirable properties like smoothness or sparsity. The paper's approach uses total variation regularization in the Radon domain, which promotes sparse representations in the form of neural networks.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the problem of recovering a function from point samples $\{(x_n, y_n)\}_{n=1}^N$. This can be formulated as an inverse problem:
+            </p>
+            <p>
+                $$\min_{f \in \mathcal{F}_m} \sum_{n=1}^N |f(x_n) - y_n|^2 + \lambda\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$
+            </p>
+            <p>
+                Here, the measurement operator $V$ applies point sampling: $Vf = (f(x_1), \ldots, f(x_N))$, and the data fitting term $G$ is the squared error.
+            </p>
+            <p>
+                Without regularization ($\lambda = 0$), this problem has infinitely many solutions since we're trying to recover a continuous function from a finite number of samples. However, with the regularization term, the paper proves that the solution has a specific form: a single-hidden layer neural network with at most $N$ neurons.
+            </p>
+            <p>
+                Specifically, for $m=2$ (corresponding to ReLU activation), the solution takes the form:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$
+            </p>
+            <p>
+                where $K \leq N$. This illustrates how the inverse problem formulation with appropriate regularization leads directly to neural network models with bounded complexity.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="variational_framework.html">Variational Framework</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="sparsity_regularizers.html">Sparsity Promoting Regularizers</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="scattered_data.html">Scattered Data Approximation</a></li>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

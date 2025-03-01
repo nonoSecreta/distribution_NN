@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scattered Data Approximation</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Scattered Data Approximation</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Scattered data approximation is a fundamental problem in machine learning where a function must be reconstructed from arbitrarily positioned data points, which the paper shows is optimally solved by neural networks when using appropriate regularization.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            The problem of approximating a function from scattered data points arises in numerous practical applications, including machine learning, computer graphics, scientific computing, and signal processing. Unlike grid-based approximation, scattered data points have no regular structure, making the approximation problem more challenging.
+        </p>
+        <p>
+            The paper establishes a mathematical foundation for understanding why neural networks are effective for scattered data approximation. By formulating the problem in a variational framework, the authors show that single-hidden layer neural networks with appropriate regularization are not just adequate for scattered data approximation—they are optimal solutions to the problem under certain criteria.
+        </p>
+        <p>
+            This result provides theoretical justification for the empirical success of neural networks in function approximation tasks and offers insights into how to select network architectures and regularization strategies for optimal performance.
+        </p>
+        <h2>Mathematical Formulation</h2>
+        <p>
+            In the scattered data approximation problem, we are given data points $$\{(x_n, y_n)\}_{n=1}^N \subset \mathbb{R}^d \times \mathbb{R}$$ and wish to find a function $$f: \mathbb{R}^d \to \mathbb{R}$$ that approximates this data.
+        </p>
+        <p>
+            The paper formulates this as a variational problem:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} \sum_{n=1}^N \ell(f(x_n), y_n) + \lambda\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            where:
+        </p>
+        <ul>
+            <li>$$\mathcal{F}_m$$ is the native space of the operator $$R_m$$</li>
+            <li>$$\ell(\cdot, \cdot)$$ is an appropriate loss function (e.g., squared error)</li>
+            <li>$$\lambda > 0$$ is a regularization parameter</li>
+            <li>$$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$ is the total variation seminorm in the Radon domain</li>
+        </ul>
+        <p>
+            This formulation encompasses both interpolation (when $$\lambda \to 0$$) and smoothing (for $$\lambda > 0$$) variants of the problem. The paper's representer theorem shows that the solution to this problem has the form:
+        </p>
+        <div class="definition">
+            <p>$$f(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$</p>
+        </div>
+        <p>
+            where $$K \leq N - \dim \mathcal{N}_m$$, $$\rho_m$$ is the truncated power function, and $$c(x)$$ is a polynomial of degree less than $$m$$.
+        </p>
+        <p>
+            This can be equivalently recast as a finite-dimensional neural network training problem:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(f_\theta(x_n), y_n) + \lambda\sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+        </div>
+        <p>
+            where $$\theta$$ represents the neural network parameters. For the case of ReLU activation functions ($$m=2$$), this becomes:
+        </p>
+        <div class="definition">
+            <p>$$\min_{\theta \in \Theta} \sum_{n=1}^N \ell(f_\theta(x_n), y_n) + \lambda\sum_{k=1}^K |v_k|\|w_k\|_2$$</p>
+        </div>
+        <p>
+            This shows that neural network training with appropriate regularization is equivalent to solving the variational scattered data approximation problem.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a simple 2D scattered data approximation problem with 20 data points. According to the paper's framework, the optimal solution with ReLU activation functions ($$m=2$$) would have the form:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^Tx - b_k\} + u^Tx + s$$
+            </p>
+            <p>
+                where $$K \leq 20 - (2+1) = 17$$ (since the dimension of the null space $$\mathcal{N}_2$$ in 2D is 3, corresponding to the affine functions).
+            </p>
+            <p>
+                If we use the squared error loss and train this network with the regularizer $$\lambda\sum_{k=1}^K |v_k|\|w_k\|_2$$, we obtain a solution that:
+            </p>
+            <ul>
+                <li>Fits the data points with minimal error</li>
+                <li>Uses as few neurons as needed (sparse representation)</li>
+                <li>Places the "hinges" (defined by $$w_k^Tx = b_k$$) in optimal locations</li>
+                <li>Has a regularization parameter $$\lambda$$ that controls the trade-off between data fidelity and function smoothness</li>
+            </ul>
+            <p>
+                An interesting property is that as $$\lambda \to 0$$, the solution approaches a perfect interpolator of the data points. In contrast, as $$\lambda$$ increases, the solution becomes smoother but might have higher approximation error. The optimal choice of $$\lambda$$ depends on factors like noise level and the smoothness of the underlying function being approximated.
+            </p>
+            <p>
+                This example illustrates how the paper's framework provides a theoretical explanation for why neural networks with appropriate regularization can efficiently solve scattered data approximation problems.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="function_approximation.html">Function Approximation</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="spline_theory.html">Spline Theory</a></li>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

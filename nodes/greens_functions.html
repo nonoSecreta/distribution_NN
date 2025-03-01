@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green's Functions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="../js/mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Green's Functions</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Green's functions are fundamental solutions to differential operators that allow representation of complex solutions through convolution operations. In the paper, the neurons of a neural network can be viewed as translated Green's functions of the operator $R_m$, providing a key connection between neural networks and the sparsifying effect of the Radon transform.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Green's functions play a crucial role in understanding the connection between neural networks and regularized variational problems. They provide:
+        </p>
+        <ul>
+            <li>A way to represent neurons mathematically as fundamental solutions to differential operators</li>
+            <li>A mechanism to explain why the operator $R_m$ sparsifies neural networks in the Radon domain</li>
+            <li>A link between the theory of L-splines and the ridge splines introduced in the paper</li>
+            <li>An elegant way to express complex solutions to variational problems as linear combinations of simple building blocks</li>
+        </ul>
+        <p>
+            By establishing that neurons are effectively Green's functions of the operator $R_m$, the authors provide a theoretical foundation for why neural networks with specific regularizers are optimal for data fitting problems.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            A Green's function for a linear differential operator $L$ is a function $G$ that satisfies:
+        </p>
+        <div class="definition">
+            <p>$$L\{G\} = \delta$$</p>
+        </div>
+        <p>
+            where $\delta$ is the Dirac impulse. In other words, a Green's function is a fundamental solution to the operator $L$.
+        </p>
+        <p>
+            In the context of the paper, the authors show that the neurons used in single-hidden layer neural networks are effectively translated Green's functions of the operator $R_m = c_d \partial_t^m \Lambda_{d-1} \mathcal{R}$. Specifically, they prove in Lemma 17 that:
+        </p>
+        <div class="definition">
+            <p>$$R_m r_{(w,b)}^{(m)} = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - z) + (-1)^m \delta_{S^{d-1}\times\mathbb{R}}(\cdot + z)}{2}$$</p>
+        </div>
+        <p>
+            where:
+            <ul>
+                <li>$r_{(w,b)}^{(m)}(x) = \rho_m(w^T x - b)$ is a neuron with activation $\rho_m = \max\{0, \cdot\}^{m-1}/(m-1)!$</li>
+                <li>$z = (w, b) \in S^{d-1} \times \mathbb{R}$ is the parameter in the Radon domain</li>
+                <li>$\delta_{S^{d-1}\times\mathbb{R}}$ is the Dirac impulse on the Radon domain</li>
+            </ul>
+        </p>
+        <p>
+            This result shows that neurons are "sparsified" by the operator $R_m$, meaning they are mapped to Dirac impulses in the Radon domain. This property is fundamental to the representer theorem, as it explains why solutions to the variational problem take the form of single-hidden layer neural networks.
+        </p>
+        <p>
+            The paper also introduces the operator $R_{m,\phi}^{-1}$, which acts as a right-inverse of $R_m$ and can be viewed as a generalized convolution with the Green's function. This allows expressing any function $f \in F_m$ as:
+        </p>
+        <div class="definition">
+            <p>$$f = R_{m,\phi}^{-1} u + q$$</p>
+        </div>
+        <p>
+            where $u = R_m f$ and $q$ is a polynomial in the null space of $R_m$. When $u$ is a linear combination of Dirac impulses, this representation gives exactly a single-hidden layer neural network.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider the ReLU activation function ($m=2$): $\rho_2(t) = \max\{0, t\}$.
+            </p>
+            <p>
+                A ReLU neuron $r_{(w,b)}^{(2)}(x) = \max\{0, w^T x - b\}$ is a Green's function of the operator $R_2 = c_d \partial_t^2 \Lambda_{d-1} \mathcal{R}$ in the sense that:
+            </p>
+            <p>$$R_2 \{\max\{0, w^T x - b\}\} = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - (w, b)) + \delta_{S^{d-1}\times\mathbb{R}}(\cdot + (w, b))}{2}$$</p>
+            <p>
+                This can be visualized as in Figure 3 of the paper, where applying $R_2$ to a 2D ReLU network with 7 neurons results in exactly 7 Dirac impulses in the Radon domain.
+            </p>
+            <p>
+                In the univariate case ($d=1$), this relationship simplifies to:
+            </p>
+            <p>$$D^2 \{\max\{0, x - b\}\} = \delta(x - b)$$</p>
+            <p>
+                which is the classical relationship between the second derivative and the ReLU function, showing that the ReLU is a Green's function for the second derivative operator.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="linear_operators.html">Linear Operators</a></li>
+            <li><a href="l_splines.html">L-Splines</a></li>
+            <li><a href="dirac_impulse.html">Dirac Impulse</a></li>
+            <li><a href="right_inverse.html">Right Inverse Operators</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="ridge_functions.html">Ridge Functions</a></li>
+            <li><a href="neural_networks.html">Neural Networks</a></li>
+            <li><a href="ridge_splines.html">Ridge Splines</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

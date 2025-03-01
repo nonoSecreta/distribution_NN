@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Norm</title>
+    <link rel="stylesheet" href="../css/style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>M-Norm</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            The M-norm, or total variation norm of Radon measures, is a fundamental concept in the paper's variational framework, serving as the continuous-domain analogue to the ℓ₁-norm and promoting sparse solutions that correspond to neural networks.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            In many optimization problems, the choice of regularization norm significantly impacts the structure of solutions. The ℓ₁-norm is well-known for promoting sparsity in finite-dimensional problems. For continuous-domain problems, the natural extension is the M-norm, which similarly encourages sparse solutions but in a function space setting.
+        </p>
+        <p>
+            The paper leverages the M-norm to establish a connection between neural networks and variational problems. By using the M-norm in the Radon domain as regularization, the authors show that the solutions to continuous-domain inverse problems are precisely single-hidden layer neural networks. This provides theoretical justification for why neural networks are effective function approximators while offering insights into appropriate regularization strategies.
+        </p>
+        <h2>Mathematical Definition</h2>
+        <p>
+            The M-norm, denoted $$\|\cdot\|_{M(X)}$$, is defined on the space $$M(X)$$ of finite Radon measures on a locally compact Hausdorff space $$X$$. It corresponds to the total variation norm of measures and can be formally defined as:
+        </p>
+        <div class="definition">
+            <p>$$\|\mu\|_{M(X)} := \sup_{\phi \in C_0(X), \|\phi\|_\infty=1} \langle \mu, \phi \rangle$$</p>
+        </div>
+        <p>
+            where $$C_0(X)$$ is the space of continuous functions vanishing at infinity, and $$\langle \mu, \phi \rangle$$ denotes the duality pairing, which can be understood as the integral $$\int_X \phi(x) d\mu(x)$$.
+        </p>
+        <p>
+            The space $$M(X)$$ equipped with the M-norm forms a Banach space. This space can be viewed as a generalization of the space $$L^1(X)$$ that also includes singular measures like Dirac impulses. In fact, the Riesz-Markov-Kakutani representation theorem establishes that $$M(X)$$ is isometrically isomorphic to the dual space of $$C_0(X)$$.
+        </p>
+        <p>
+            In the paper, the authors use the M-norm on the Radon domain $$X = S^{d-1} \times \mathbb{R}$$ as part of their regularization approach:
+        </p>
+        <div class="definition">
+            <p>$$\|f\|_{(m)} := c_d\|\partial_t^m\Lambda_{d-1}\mathcal{R}f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            This seminorm measures the total variation of the distribution obtained by applying the operator $$R_m = c_d\partial_t^m\Lambda_{d-1}\mathcal{R}$$ to the function $$f$$. The key insight is that applying $$R_m$$ to a neural network "sparsifies" it, resulting in a sum of Dirac impulses in the Radon domain, similar to how the derivative operator sparsifies splines.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                To understand the M-norm and its effect on promoting sparsity, let's consider a concrete example with ReLU networks ($$m=2$$).
+            </p>
+            <p>
+                Consider a single ReLU neuron $$r(x) = \max\{0, w^T x - b\}$$. When we apply the operator $$R_2$$ to it, we get a Dirac impulse in the Radon domain:
+            </p>
+            <p>
+                $$R_2 r = \frac{\delta_{S^{d-1}\times\mathbb{R}}(\cdot - (w', b')) + \delta_{S^{d-1}\times\mathbb{R}}(\cdot + (w', b'))}{2}$$
+            </p>
+            <p>
+                where $$w' = \frac{w}{\|w\|_2}$$ and $$b' = \frac{b}{\|w\|_2}$$.
+            </p>
+            <p>
+                The M-norm of this measure is exactly $$\|w\|_2$$. Therefore, for a ReLU network:
+            </p>
+            <p>
+                $$f(x) = \sum_{k=1}^K v_k\max\{0, w_k^T x - b_k\} + u^T x + s$$
+            </p>
+            <p>
+                its seminorm is:
+            </p>
+            <p>
+                $$\|f\|_{(2)} = \|R_2 f\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2$$
+            </p>
+            <p>
+                This is exactly the path-norm regularization used in deep learning! The M-norm provides a theoretical foundation for this practical regularization strategy.
+            </p>
+            <p>
+                When minimizing this seminorm while fitting data, the optimization naturally favors solutions with few nonzero terms (neurons). This is analogous to how ℓ₁ regularization in LASSO regression promotes sparse coefficient vectors. In the continuous-domain setting, the M-norm plays the same role, encouraging the solution to be a sparse sum of "atoms" (in this case, ReLU neurons).
+            </p>
+            <p>
+                For higher values of $$m$$, the M-norm similarly measures the total variation of the distribution obtained from applying $$R_m$$ to the function, leading to single-hidden layer networks with different activation functions but with the same sparsity-promoting property.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="representer_theorem.html">Representer Theorem</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="sparsity_regularizers.html">Sparsity Promoting Regularizers</a></li>
+        </ul>
+        <h3>Mathematical Foundations</h3>
+        <ul>
+            <li><a href="radon_domain.html">Radon Domain</a></li>
+            <li><a href="banach_spaces.html">Banach Spaces</a></li>
+            <li><a href="riesz_markov.html">Riesz-Markov-Kakutani Representation</a></li>
+            <li><a href="native_spaces.html">Native Spaces</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>

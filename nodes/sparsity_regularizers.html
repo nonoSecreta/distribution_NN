@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparsity Promoting Regularizers</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Sparsity Promoting Regularizers</h1>
+    <div class="concept-card">
+        <div class="concept-summary">
+            Sparsity promoting regularizers are mathematical penalties that encourage solutions with few non-zero components, with the paper showing that total variation in the Radon domain serves as such a regularizer for neural networks, explaining why they can achieve sparse, generalizable solutions.
+        </div>
+        <h2>Motivation</h2>
+        <p>
+            Sparsity is a desirable property in many machine learning and signal processing tasks because sparse solutions tend to be more interpretable, computationally efficient, and often generalize better to unseen data. When a solution is sparse, it uses only a minimal number of components or building blocks to represent the target function or signal.
+        </p>
+        <p>
+            The paper makes a significant contribution by showing that neural networks, when appropriately regularized, naturally exhibit sparsity in the Radon domain. This theoretical insight explains why neural networks can effectively learn from limited data despite their often vast parameter spaces—the regularization implicitly constrains the effective complexity of the learned function.
+        </p>
+        <p>
+            Understanding sparsity promoting regularizers helps practitioners design better neural network training strategies and provides a theoretical framework for analyzing the functional properties of trained networks. It also establishes connections between neural networks and other sparse approximation methods such as LASSO regression and compressed sensing.
+        </p>
+        <h2>Definition and Properties</h2>
+        <p>
+            A regularizer $$R(f)$$ is said to promote sparsity if it encourages solutions where most components of the function representation are zero or nearly zero. The most common sparsity promoting regularizer in finite-dimensional settings is the $$\ell_1$$ norm, which leads to the LASSO regression formulation.
+        </p>
+        <p>
+            In the continuous-domain framework of the paper, the total variation norm in the Radon domain serves as a sparsity promoting regularizer:
+        </p>
+        <div class="definition">
+            <p>$$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})} = c_d\|\partial_t^m\Lambda_{d-1}\mathcal{R}f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            For neural networks, this regularizer takes the explicit form:
+        </p>
+        <div class="definition">
+            <p>$$\|R_m f\|_{M(S^{d-1}\times\mathbb{R})} = \sum_{k=1}^K |v_k|\|w_k\|_2^{m-1}$$</p>
+        </div>
+        <p>
+            where $$f(x) = \sum_{k=1}^K v_k \rho_m(w_k^T x - b_k) + c(x)$$ is a neural network with truncated power activation functions.
+        </p>
+        <p>
+            Key properties of this regularizer include:
+        </p>
+        <ul>
+            <li>It is the continuous-domain analogue of the $$\ell_1$$ norm in discrete settings</li>
+            <li>It penalizes the total variation (in the sense of measures) of the function's representation in the Radon domain</li>
+            <li>It promotes solutions where the representation has few non-zero components (i.e., few neurons)</li>
+            <li>It leads to solutions that use at most $$N$$ neurons (where $$N$$ is the number of data points), regardless of the width of the network during training</li>
+            <li>For ReLU networks ($$m=2$$), it is equivalent to the path-norm regularizer $$\sum_{k=1}^K |v_k|\|w_k\|_2$$</li>
+            <li>It adapts naturally to the growth rate of the activation function via the exponent $$m-1$$</li>
+        </ul>
+        <p>
+            When minimizing a loss function with this regularizer, the optimization problem takes the form:
+        </p>
+        <div class="definition">
+            <p>$$\min_{f \in \mathcal{F}_m} G(Vf) + \lambda\|R_m f\|_{M(S^{d-1}\times\mathbb{R})}$$</p>
+        </div>
+        <p>
+            The paper's representer theorem guarantees that solutions to this problem are single-hidden layer neural networks with at most $$N$$ neurons, demonstrating the sparsity-inducing nature of the regularizer.
+        </p>
+        <div class="example-box">
+            <h3>Example</h3>
+            <p>
+                Consider a regression problem with 50 data points in 2D space. We want to fit a neural network to this data while promoting sparsity to avoid overfitting. Using the total variation regularizer for ReLU networks ($$m=2$$):
+            </p>
+            <p>
+                $$\min_{\theta \in \Theta} \sum_{n=1}^{50} (f_\theta(x_n) - y_n)^2 + \lambda\sum_{k=1}^K |v_k|\|w_k\|_2$$
+            </p>
+            <p>
+                We might start with a wide network (e.g., $$K = 1000$$ neurons), but the regularizer will drive most of the coefficients $$v_k$$ to zero during training. The representer theorem guarantees that the final solution will use at most 50 neurons (and likely fewer if the underlying function is simple).
+            </p>
+            <p>
+                To visualize the sparsity-promoting effect, imagine training this network with different values of $$\lambda$$:
+            </p>
+            <ul>
+                <li>With $$\lambda = 0$$ (no regularization), the network might use all available neurons and perfectly fit the training data, potentially overfitting.</li>
+                <li>With a small $$\lambda > 0$$, the network will use fewer neurons, but still provide a good fit to the data.</li>
+                <li>As $$\lambda$$ increases, the number of active neurons decreases, eventually approaching a simple model (e.g., just the affine term from the null space).</li>
+            </ul>
+            <p>
+                For instance, with a moderate $$\lambda$$, the solution might use only 15 neurons, much fewer than the 50 data points. Each neuron corresponds to a "hinge" or "knot" in the function, placed at an optimal location to approximate the data efficiently.
+            </p>
+            <p>
+                This example illustrates how the total variation regularizer promotes sparse neural network solutions, leading to models that are not only accurate but also computationally efficient and potentially more generalizable to new data.
+            </p>
+        </div>
+    </div>
+    <div class="node-links">
+        <h3>Related Concepts</h3>
+        <ul>
+            <li><a href="total_variation.html">Total Variation Regularization</a></li>
+            <li><a href="m_norm.html">M-Norm</a></li>
+            <li><a href="path_norm.html">Path-Norm Regularization</a></li>
+            <li><a href="weight_decay.html">Weight Decay Regularization</a></li>
+        </ul>
+        <h3>Applications</h3>
+        <ul>
+            <li><a href="neural_network_training.html">Neural Network Training</a></li>
+            <li><a href="statistical_generalization.html">Statistical Generalization</a></li>
+            <li><a href="inverse_problems.html">Inverse Problems</a></li>
+        </ul>
+    </div>
+    <a href="../index.html" class="back-link">← Back to Main Index</a>
+</body>
+</html>
