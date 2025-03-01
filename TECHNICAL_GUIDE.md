@@ -17,10 +17,21 @@ Always use this full path when executing Python scripts to ensure proper functio
 
 MathJax is used to render LaTeX mathematical expressions in HTML files. All HTML files should include the following script references in the `<head>` section:
 
+**For main index.html:**
 ```html
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 ```
+
+**For node HTML files:**
+```html
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="../js/mathjax-config.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+```
+
+**IMPORTANT:** All HTML files must use the same MathJax script source (`tex-svg.js`). Do not use `tex-mml-chtml.js` as it may cause rendering inconsistencies.
 
 ## Utility Scripts
 
@@ -64,6 +75,26 @@ This utility identifies missing nodes, broken links, and incomplete content sect
 - After adding new nodes
 - Before updating the project tracker
 - Periodically as a quality check
+
+### verify_mathjax_complete.py
+
+This utility verifies that all HTML files have the correct MathJax configuration.
+
+**Usage:**
+```bash
+/usr/local/bin/python3 /Users/dengzishan/Documents/paper_reading/distribution_NN/verify_mathjax_complete.py
+```
+
+**What it does:**
+- Checks all HTML files to ensure they have the correct config path and script source
+- Verifies that index.html uses `js/mathjax-config.js` and node files use `../js/mathjax-config.js`
+- Confirms that all files use the same MathJax script source (`tex-svg.js`)
+- Provides a detailed report of any issues
+
+**When to use:**
+- After making changes to HTML files
+- When math expressions aren't rendering correctly
+- Before deploying to GitHub Pages
 
 ### scan_ugly_expression.py
 
@@ -122,21 +153,26 @@ Example:
 
 If LaTeX expressions aren't rendering properly in the browser:
 
-1. Check that MathJax is properly included in the HTML file:
+1. Run the verify_mathjax_complete.py utility to check your MathJax configuration:
    ```bash
-   grep -l "MathJax-script" your-file.html
+   /usr/local/bin/python3 /Users/dengzishan/Documents/paper_reading/distribution_NN/verify_mathjax_complete.py
    ```
 
-2. If not present, run the add_mathjax.py utility:
+2. If issues are found, ensure that:
+   - All files include the correct path to mathjax-config.js (either `js/mathjax-config.js` for the main index or `../js/mathjax-config.js` for nodes)
+   - All files use the same MathJax script source (`tex-svg.js`)
+   - The config and script tags appear in the correct order
+
+3. If MathJax is missing entirely, run the add_mathjax.py utility:
    ```bash
    /usr/local/bin/python3 /Users/dengzishan/Documents/paper_reading/distribution_NN/add_mathjax.py
    ```
 
-3. Verify that all LaTeX expressions use proper formatting:
+4. Verify that all LaTeX expressions use proper formatting:
    - Inline expressions should be wrapped in single dollar signs: `$expression$`
    - Block expressions should be wrapped in double dollar signs: `$$expression$$`
 
-4. Clear browser cache and reload the page
+5. Clear browser cache and reload the page
 
 ### Script Execution Errors
 
@@ -166,3 +202,5 @@ If you encounter errors running the utility scripts:
 4. Ensure all mathematical content uses proper LaTeX notation
 5. Maintain bidirectional linking between related concepts
 6. Follow the HTML template structure when creating new nodes
+7. Always use the same MathJax script source (`tex-svg.js`) across all HTML files
+8. Run verify_mathjax_complete.py before committing changes to ensure consistent math rendering
