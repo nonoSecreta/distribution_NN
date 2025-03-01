@@ -1,0 +1,11 @@
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Basic site settings
+title: "Banach Space Representer Theorems for Neural Networks"
+description: "An interactive knowledge graph for mathematical concepts related to neural networks and ridge splines"
+url: "https://nonosecreta.github.io/distribution_NN"
+
+# GitHub Pages settings
+future: true
